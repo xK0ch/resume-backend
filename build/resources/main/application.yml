@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/resume-database
+    username: admin
+    password: letmein
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    baseline-version: 1
+    locations: classpath:db
+    clean-on-validation-error: false
+    connect-retries: 5
+    enabled: true
+    baseline-on-migrate: true
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+springdoc:
+  api-docs:
+    path: '/docs'
+  swagger-ui:
+    path: '/docs/ui'
