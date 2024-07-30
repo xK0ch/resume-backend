@@ -1,7 +1,6 @@
 package de.fynnkoch;
 
-import de.fynnkoch.modules.contactinformation.ContactInformationRepository;
-import lombok.AccessLevel;
+import de.fynnkoch.modules.resume.ResumeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +13,9 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 class DataBaseCleanerService {
 
-    ContactInformationRepository contactInformationRepository;
+    ResumeRepository resumeRepository;
 
     void resetAllTables() {
-        contactInformationRepository.deleteAllInBatch();
+        resumeRepository.deleteAllInBatch();
     }
 }

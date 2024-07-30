@@ -1,13 +1,8 @@
 pluginManagement {
-    resolutionStrategy {
-        eachPlugin {
-            if (requested.id.id == "org.springframework.boot") {
-                useModule("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-            }
-        }
+    plugins {
+        id 'org.springframework.boot' version "${springBootVersion}"
+        id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
     }
 }
-
-
 
 rootProject.name = 'resume-backend'

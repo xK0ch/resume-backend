@@ -1,4 +1,4 @@
-package de.fynnkoch.core;
+package de.fynnkoch.core.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,8 +14,8 @@ import static java.time.temporal.ChronoUnit.MICROS;
 @EnableJpaAuditing(dateTimeProviderRef = "dateTimeProvider")
 public class AuditingConfiguration {
 
-    @Bean
-    public DateTimeProvider dateTimeProvider() {
-        return () -> Optional.of(now().truncatedTo(MICROS));
-    }
+  @Bean
+  public DateTimeProvider dateTimeProvider() {
+    return () -> Optional.of(now().truncatedTo(MICROS));
+  }
 }

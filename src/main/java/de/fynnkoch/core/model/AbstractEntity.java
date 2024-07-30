@@ -1,7 +1,4 @@
-package de.fynnkoch.core;
-
-import java.time.ZonedDateTime;
-import java.util.UUID;
+package de.fynnkoch.core.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -10,9 +7,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
+import java.time.ZonedDateTime;
+import java.util.UUID;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
@@ -23,24 +21,18 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Setter
 @SuperBuilder
 @MappedSuperclass
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AbstractEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(columnDefinition = "UUID")
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(columnDefinition = "UUID")
+  private UUID id;
 
-    @NotNull
-    @Column
-    @CreatedDate
-    private ZonedDateTime createdAt;
+  @NotNull @Column @CreatedDate private ZonedDateTime createdAt;
 
-    @NotNull
-    @Column
-    @LastModifiedDate
-    private ZonedDateTime lastModifiedAt;
+  @NotNull @Column @LastModifiedDate private ZonedDateTime lastModifiedAt;
+
+  @NotNull @Column private Boolean isDeleted;
 }
-

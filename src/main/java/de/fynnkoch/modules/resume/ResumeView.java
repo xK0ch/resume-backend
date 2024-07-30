@@ -1,0 +1,43 @@
+package de.fynnkoch.modules.resume;
+
+import static lombok.AccessLevel.PRIVATE;
+
+import de.fynnkoch.core.model.AbstractEntityView;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.experimental.FieldDefaults;
+
+@Data
+@ToString(callSuper = true)
+@FieldDefaults(level = PRIVATE)
+@EqualsAndHashCode(callSuper = true)
+public class ResumeView extends AbstractEntityView {
+
+  @NotNull String firstName;
+
+  @NotNull String lastName;
+
+  @NotNull Sex sex;
+
+  @NotNull LocalDate dateOfBirth;
+
+  @NotNull String address;
+
+  @NotNull String postalCode;
+
+  @NotNull String city;
+
+  @NotNull String country;
+
+  @NotNull String phoneNumber;
+
+  @NotNull String email;
+
+  @Nullable String linkedin;
+
+  @Nullable String github;
+}
