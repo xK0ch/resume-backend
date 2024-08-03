@@ -2,7 +2,9 @@ package de.fynnkoch.modules.resume;
 
 import static lombok.AccessLevel.PRIVATE;
 
-import de.fynnkoch.core.model.AbstractEntity;
+import de.fynnkoch.core.models.Sex;
+import de.fynnkoch.core.models.Status;
+import de.fynnkoch.core.models.AbstractEntity;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -52,4 +54,9 @@ public class Resume extends AbstractEntity {
   @Nullable @Column String linkedin;
 
   @Nullable @Column String github;
+
+  @NotNull
+  @Column
+  @Enumerated(EnumType.STRING)
+  Status status;
 }

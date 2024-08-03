@@ -1,4 +1,4 @@
-package de.fynnkoch.modules.resume;
+package de.fynnkoch.core.models;
 
 public enum Sex {
     FEMALE,

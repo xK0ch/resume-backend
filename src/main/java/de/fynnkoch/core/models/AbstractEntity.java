@@ -1,4 +1,4 @@
-package de.fynnkoch.core.model;
+package de.fynnkoch.core.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

@@ -1,4 +1,4 @@
-package de.fynnkoch.core.configuration;
+package de.fynnkoch.core;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

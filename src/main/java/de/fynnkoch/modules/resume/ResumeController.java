@@ -1,8 +1,12 @@
 package de.fynnkoch.modules.resume;
 
+import static de.fynnkoch.core.EntityHelper.checkIfUnmodifiedSince;
 import static lombok.AccessLevel.PRIVATE;
 
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +20,40 @@ public class ResumeController implements ResumeContract {
   ResumeMapper resumeMapper;
 
   @Override
-  public List<ResumeView> getAllResumes() {
-    return this.resumeService.getAllResumes().stream().map(this.resumeMapper::toView).toList();
+  public List<ResumeView> getAll() {
+    return this.resumeService.getAll().stream().map(this.resumeMapper::toView).toList();
+  }
+
+  @Override
+  public ResumeView getOne(@NonNull final UUID resumeId) {
+    return this.resumeMapper.toView(this.resumeService.getOne(resumeId));
+  }
+
+  @Override
+  public ResumeView create(@NonNull final ResumeCreateOrder resumeCreateOrder) {
+    final var resume = this.resumeMapper.fromCreateOrder(resumeCreateOrder);
+    return this.resumeMapper.toView(this.resumeService.save(resume));
+  }
+
+  @Override
+  public ResumeView update(
+      @NonNull final UUID resumeId,
+      @NonNull final ResumeUpdateOrder resumeUpdateOrder,
+      @NonNull final ZonedDateTime ifModifiedSince) {
+    final var existingResume = this.resumeService.getOne(resumeId);
+
+    checkIfUnmodifiedSince(resumeId, ifModifiedSince, existingResume);
+
+    final var resume = this.resumeMapper.fromUpdateOrder(existingResume, resumeUpdateOrder);
+    return this.resumeMapper.toView(this.resumeService.save(resume));
+  }
+
+  @Override
+  public void delete(@NonNull final UUID resumeId, @NonNull final ZonedDateTime ifModifiedSince) {
+    final var existingResume = this.resumeService.getOne(resumeId);
+
+    checkIfUnmodifiedSince(resumeId, ifModifiedSince, existingResume);
+
+    this.resumeService.delete(existingResume);
   }
 }

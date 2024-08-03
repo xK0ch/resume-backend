@@ -17,5 +17,6 @@ CREATE TABLE resume
     email            VARCHAR(255)             NOT NULL,
     description      VARCHAR(255)             NOT NULL,
     linkedin         VARCHAR(255) NULL,
-    github           VARCHAR(255) NULL
+    github           VARCHAR(255) NULL,
+    status           VARCHAR(255)             NOT NULL
 );

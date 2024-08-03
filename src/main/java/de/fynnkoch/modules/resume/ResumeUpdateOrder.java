@@ -1,23 +1,16 @@
 package de.fynnkoch.modules.resume;
 
-import static lombok.AccessLevel.PRIVATE;
-
-import de.fynnkoch.core.models.AbstractEntityView;
 import de.fynnkoch.core.models.Sex;
-import de.fynnkoch.core.models.Status;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
-import java.time.LocalDate;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDate;
 
 @Data
-@ToString(callSuper = true)
-@FieldDefaults(level = PRIVATE)
-@EqualsAndHashCode(callSuper = true)
-public class ResumeView extends AbstractEntityView {
+@Builder
+public class ResumeUpdateOrder {
 
   @NotNull String firstName;
 
@@ -44,6 +37,4 @@ public class ResumeView extends AbstractEntityView {
   @Nullable String linkedin;
 
   @Nullable String github;
-
-  @NotNull Status status;
 }
