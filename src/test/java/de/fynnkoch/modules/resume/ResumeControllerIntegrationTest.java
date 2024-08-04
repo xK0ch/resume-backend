@@ -21,7 +21,6 @@ import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.PRECONDITION_FAILED;
 
 import de.fynnkoch.AbstractIntegrationTest;
-import java.time.ZonedDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,8 @@ import org.springframework.http.ProblemDetail;
 
 public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
 
-  private static final String RESUME_PATH = "/resumes";
+  private static final String RESUME_PATH = "/resumes/%s";
+  private static final String RESUMES_PATH = "/resumes";
 
   @Autowired private ResumeRepository resumeRepository;
 
@@ -40,7 +40,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
     final List<ResumeView> resume =
         given()
             .contentType(JSON)
-            .get(getFullPathVariable(RESUME_PATH))
+            .get(getFullPathVariable(RESUMES_PATH))
             .then()
             .statusCode(OK.value())
             .extract()
@@ -86,7 +86,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
     final List<ResumeView> resume =
         given()
             .contentType(JSON)
-            .get(getFullPathVariable(RESUME_PATH))
+            .get(getFullPathVariable(RESUMES_PATH))
             .then()
             .statusCode(OK.value())
             .extract()
@@ -103,7 +103,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
     final ResumeView resume =
         given()
             .contentType(JSON)
-            .get(getFullPathVariable(RESUME_PATH + "/" + savedResume.getId()))
+            .get(getFullPathVariable(format(RESUME_PATH, savedResume.getId())))
             .then()
             .statusCode(OK.value())
             .extract()
@@ -143,13 +143,13 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
-  public void getOne_notFound() {
+  public void getOne_resumeNotFound() {
     final var resumeId = randomUUID();
 
     final ProblemDetail problemDetail =
         given()
             .contentType(JSON)
-            .get(getFullPathVariable(RESUME_PATH + "/" + resumeId))
+            .get(getFullPathVariable(format(RESUME_PATH, resumeId)))
             .then()
             .statusCode(NOT_FOUND.value())
             .extract()
@@ -170,7 +170,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
         given()
             .contentType(JSON)
             .body(resumeCreateOrder)
-            .post(getFullPathVariable(RESUME_PATH))
+            .post(getFullPathVariable(RESUMES_PATH))
             .then()
             .statusCode(CREATED.value())
             .extract()
@@ -224,7 +224,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
                 ofPattern(ISO_DATETIME_FORMAT).format(savedResume.getLastModifiedAt()))
             .contentType(JSON)
             .body(resumeUpdateOrder)
-            .put(getFullPathVariable(RESUME_PATH + "/" + savedResume.getId()))
+            .put(getFullPathVariable(format(RESUME_PATH, savedResume.getId())))
             .then()
             .statusCode(OK.value())
             .extract()
@@ -264,7 +264,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
-  public void update_notFound() {
+  public void update_resumeNotFound() {
     final var resumeId = randomUUID();
 
     final ProblemDetail problemDetail =
@@ -272,7 +272,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
             .contentType(JSON)
             .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(now()))
             .body(resumeUpdateOrder())
-            .put(getFullPathVariable(RESUME_PATH + "/" + resumeId))
+            .put(getFullPathVariable(format(RESUME_PATH, resumeId)))
             .then()
             .statusCode(NOT_FOUND.value())
             .extract()
@@ -286,14 +286,25 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
   @Test
   public void update_modifiedSince() {
     final var savedResume = resumeRepository.save(resume());
-    final ZonedDateTime lastModifiedAt = savedResume.getLastModifiedAt().minusHours(1);
+
+    given()
+        .contentType(JSON)
+        .header(
+            IF_MODIFIED_SINCE,
+            ofPattern(ISO_DATETIME_FORMAT).format(savedResume.getLastModifiedAt()))
+        .body(resumeUpdateOrder())
+        .put(getFullPathVariable(format(RESUME_PATH, savedResume.getId())))
+        .then()
+        .statusCode(OK.value());
 
     final ProblemDetail problemDetail =
         given()
             .contentType(JSON)
-            .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(lastModifiedAt))
+            .header(
+                IF_MODIFIED_SINCE,
+                ofPattern(ISO_DATETIME_FORMAT).format(savedResume.getLastModifiedAt()))
             .body(resumeUpdateOrder())
-            .put(getFullPathVariable(RESUME_PATH + "/" + savedResume.getId()))
+            .put(getFullPathVariable(format(RESUME_PATH, savedResume.getId())))
             .then()
             .statusCode(PRECONDITION_FAILED.value())
             .extract()
@@ -312,7 +323,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
                 IF_MODIFIED_SINCE,
                 ofPattern(ISO_DATETIME_FORMAT).format(savedResume.getLastModifiedAt()))
             .contentType(JSON)
-            .patch(getFullPathVariable(RESUME_PATH + "/" + savedResume.getId()))
+            .patch(getFullPathVariable(format(RESUME_PATH, savedResume.getId())))
             .then()
             .statusCode(OK.value())
             .extract()
@@ -331,7 +342,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
                 IF_MODIFIED_SINCE,
                 ofPattern(ISO_DATETIME_FORMAT).format(savedResume.getLastModifiedAt()))
             .contentType(JSON)
-            .patch(getFullPathVariable(RESUME_PATH + "/" + savedResume.getId()))
+            .patch(getFullPathVariable(format(RESUME_PATH, savedResume.getId())))
             .then()
             .statusCode(OK.value())
             .extract()
@@ -341,7 +352,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
-  public void toggleStatus_successRemoveOtherActiveResume() {
+  public void toggleStatus_successWithOtherActiveResume() {
     final var currentlyActiveResume = resumeRepository.save(resume(ACTIVE));
     final var currentlyInactiveResume = resumeRepository.save(resume());
 
@@ -351,7 +362,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
                 IF_MODIFIED_SINCE,
                 ofPattern(ISO_DATETIME_FORMAT).format(currentlyInactiveResume.getLastModifiedAt()))
             .contentType(JSON)
-            .patch(getFullPathVariable(RESUME_PATH + "/" + currentlyInactiveResume.getId()))
+            .patch(getFullPathVariable(format(RESUME_PATH, currentlyInactiveResume.getId())))
             .then()
             .statusCode(OK.value())
             .extract()
@@ -360,12 +371,53 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
     assertThat(
             this.resumeRepository.findById(currentlyActiveResume.getId()).orElseThrow().getStatus())
         .isEqualTo(INACTIVE);
-    assertThat(
-            this.resumeRepository
-                .findById(currentlyInactiveResume.getId())
-                .orElseThrow()
-                .getStatus())
-        .isEqualTo(ACTIVE);
+    assertThat(updatedResume.getStatus()).isEqualTo(ACTIVE);
+  }
+
+  @Test
+  public void toggleStatus_resumeNotFound() {
+    final var resumeId = randomUUID();
+
+    final ProblemDetail problemDetail =
+        given()
+            .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(now()))
+            .contentType(JSON)
+            .patch(getFullPathVariable(format(RESUME_PATH, resumeId)))
+            .then()
+            .statusCode(NOT_FOUND.value())
+            .extract()
+            .as(ProblemDetail.class);
+
+    assertThat(problemDetail.getTitle()).isEqualTo("Resume not found");
+    assertThat(problemDetail.getDetail())
+        .isEqualTo(format("Resume with id %s not found", resumeId));
+  }
+
+  @Test
+  public void toggleStatus_modifiedSince() {
+    final var savedResume = resumeRepository.save(resume());
+
+    given()
+        .contentType(JSON)
+        .header(
+            IF_MODIFIED_SINCE,
+            ofPattern(ISO_DATETIME_FORMAT).format(savedResume.getLastModifiedAt()))
+        .body(resumeUpdateOrder())
+        .put(getFullPathVariable(format(RESUME_PATH, savedResume.getId())))
+        .then()
+        .statusCode(OK.value());
+
+    final ProblemDetail problemDetail =
+        given()
+            .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(savedResume.getLastModifiedAt()))
+            .contentType(JSON)
+            .patch(getFullPathVariable(format(RESUME_PATH, savedResume.getId())))
+            .then()
+            .statusCode(PRECONDITION_FAILED.value())
+            .extract()
+            .as(ProblemDetail.class);
+
+    assertThat(problemDetail.getTitle()).isEqualTo("Entity has been modified");
   }
 
   @Test
@@ -377,7 +429,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
         .header(
             IF_MODIFIED_SINCE,
             ofPattern(ISO_DATETIME_FORMAT).format(savedResume.getLastModifiedAt()))
-        .delete(getFullPathVariable(RESUME_PATH + "/" + savedResume.getId()))
+        .delete(getFullPathVariable(format(RESUME_PATH, savedResume.getId())))
         .then()
         .statusCode(NO_CONTENT.value());
 
@@ -389,13 +441,24 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
   @Test
   public void delete_modifiedSince() {
     final var savedResume = resumeRepository.save(resume());
-    final ZonedDateTime lastModifiedAt = savedResume.getLastModifiedAt().minusHours(1);
+
+    given()
+        .contentType(JSON)
+        .header(
+            IF_MODIFIED_SINCE,
+            ofPattern(ISO_DATETIME_FORMAT).format(savedResume.getLastModifiedAt()))
+        .body(resumeUpdateOrder())
+        .put(getFullPathVariable(format(RESUME_PATH, savedResume.getId())))
+        .then()
+        .statusCode(OK.value());
 
     final ProblemDetail problemDetail =
         given()
             .contentType(JSON)
-            .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(lastModifiedAt))
-            .delete(getFullPathVariable(RESUME_PATH + "/" + savedResume.getId()))
+            .header(
+                IF_MODIFIED_SINCE,
+                ofPattern(ISO_DATETIME_FORMAT).format(savedResume.getLastModifiedAt()))
+            .delete(getFullPathVariable(format(RESUME_PATH, savedResume.getId())))
             .then()
             .statusCode(PRECONDITION_FAILED.value())
             .extract()

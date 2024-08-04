@@ -3,6 +3,7 @@ package de.fynnkoch.modules.resume;
 import static lombok.AccessLevel.PRIVATE;
 
 import de.fynnkoch.core.models.AbstractEntityView;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -17,31 +18,65 @@ import lombok.experimental.FieldDefaults;
 @EqualsAndHashCode(callSuper = true)
 public class ResumeView extends AbstractEntityView {
 
-  @NotNull String firstName;
+  @NotNull
+  @Schema(description = "First name of the person")
+  String firstName;
 
-  @NotNull String lastName;
+  @NotNull
+  @Schema(description = "Last name of the person")
+  String lastName;
 
-  @NotNull Sex sex;
+  @NotNull
+  @Schema(
+      description = "Sex of the person",
+      allowableValues = {"FEMALE", "DIVERSE", "MALE"})
+  Sex sex;
 
-  @NotNull LocalDate dateOfBirth;
+  @NotNull
+  @Schema(description = "Date of birth of the person")
+  LocalDate dateOfBirth;
 
-  @NotNull String address;
+  @NotNull
+  @Schema(
+      description = "Address of the person including street and house number",
+      example = "Main Street 1")
+  String address;
 
-  @NotNull String postalCode;
+  @NotNull
+  @Schema(description = "Postal code of the city")
+  String postalCode;
 
-  @NotNull String city;
+  @NotNull
+  @Schema(description = "City where the person lives")
+  String city;
 
-  @NotNull String country;
+  @NotNull
+  @Schema(description = "Country where the person lives")
+  String country;
 
-  @NotNull String phoneNumber;
+  @NotNull
+  @Schema(description = "Phone number of the person")
+  String phoneNumber;
 
-  @NotNull String email;
+  @NotNull
+  @Schema(description = "Email address of the person")
+  String email;
 
-  @NotNull String description;
+  @NotNull
+  @Schema(description = "Description of the persons skills, interests and experiences")
+  String description;
 
-  @Nullable String linkedin;
+  @Nullable
+  @Schema(description = "LinkedIn profile URL of the person")
+  String linkedin;
 
-  @Nullable String github;
+  @Nullable
+  @Schema(description = "GitHub profile URL of the person")
+  String github;
 
-  @NotNull Status status;
+  @NotNull
+  @Schema(
+      description = "Status of the resume",
+      allowableValues = {"ACTIVE", "INACTIVE"})
+  Status status;
 }
