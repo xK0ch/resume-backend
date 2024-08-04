@@ -14,6 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -50,6 +51,19 @@ public interface ResumeContract {
   ResumeView update(
       @PathVariable final UUID resumeId,
       @RequestBody final ResumeUpdateOrder resumeUpdateOrder,
+      @RequestHeader(IF_MODIFIED_SINCE) @DateTimeFormat(pattern = ISO_DATETIME_FORMAT)
+          final ZonedDateTime ifModifiedSince);
+
+  @PatchMapping("/{resumeId}")
+  @ResponseStatus(OK)
+  @Transactional
+  @Operation(
+      summary =
+          "Toggles the status of a resume from ACTIVE to INACTIVE and the other way around."
+              + " Only one resume can be active at a time",
+      tags = "Resumes")
+  ResumeView toggleStatus(
+      @PathVariable final UUID resumeId,
       @RequestHeader(IF_MODIFIED_SINCE) @DateTimeFormat(pattern = ISO_DATETIME_FORMAT)
           final ZonedDateTime ifModifiedSince);
 

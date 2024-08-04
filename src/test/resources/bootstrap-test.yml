@@ -3,7 +3,3 @@ embedded:
     enabled: true
     docker-image: 'postgres:16.3'
     wait-timeout-in-seconds: 160
-    env:
-      TZ: 'Europe/Berlin'
-      POSTGRES_LOG_TIMEZONE: 'Europe/Berlin'
-      POSTGRESQL_INITDB_ARGS: '--locale=en_US.utf8'

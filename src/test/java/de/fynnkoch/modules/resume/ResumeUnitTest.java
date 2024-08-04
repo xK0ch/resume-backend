@@ -60,6 +60,24 @@ public class ResumeUnitTest implements AbstractUnitTest {
   }
 
   @Test
+  void toggleStatus_successInactive() {
+    final var resume = resume();
+    when(resumeRepository.save(resume)).thenReturn(resume);
+    when(resumeRepository.findByStatusAndIsDeletedIsFalse(any())).thenReturn(Optional.empty());
+    final var result = resumeService.toggleStatus(resume);
+    assertThat(result.getStatus()).isEqualTo(Status.ACTIVE);
+  }
+
+  @Test
+  void toggleStatus_successActive() {
+    final var resume = resume();
+    resume.setStatus(Status.ACTIVE);
+    when(resumeRepository.save(any())).thenReturn(resume());
+    final var result = resumeService.toggleStatus(resume);
+    assertThat(result.getStatus()).isEqualTo(Status.INACTIVE);
+  }
+
+  @Test
   void delete_success() {
     final var resume = resume();
     when(resumeRepository.save(resume))

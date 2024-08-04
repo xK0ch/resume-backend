@@ -33,6 +33,12 @@ public class ResumeFactory {
         .build();
   }
 
+  public static Resume resume(final Status status) {
+    final var resume = resume();
+    resume.setStatus(status);
+    return resume;
+  }
+
   public static ResumeCreateOrder resumeCreateOrder() {
     return ResumeCreateOrder.builder()
         .firstName("Linda")

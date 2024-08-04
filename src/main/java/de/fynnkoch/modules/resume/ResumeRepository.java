@@ -12,4 +12,6 @@ public interface ResumeRepository extends JpaRepository<Resume, UUID> {
   List<Resume> findAllByIsDeletedIsFalse();
 
   Optional<Resume> findByIdAndIsDeletedIsFalse(UUID id);
+
+  Optional<Resume> findByStatusAndIsDeletedIsFalse(Status status);
 }

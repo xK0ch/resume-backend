@@ -21,6 +21,8 @@ pipeline {
 
         stage('Deploy') {
             steps {
+                sh 'docker compose down'
+                sh 'docker image prune -af'
                 sh 'docker compose up --build -d'
             }
         }

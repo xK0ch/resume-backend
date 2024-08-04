@@ -4,6 +4,8 @@ import static de.fynnkoch.core.Constants.ISO_DATETIME_FORMAT;
 import static de.fynnkoch.modules.resume.ResumeFactory.resume;
 import static de.fynnkoch.modules.resume.ResumeFactory.resumeCreateOrder;
 import static de.fynnkoch.modules.resume.ResumeFactory.resumeUpdateOrder;
+import static de.fynnkoch.modules.resume.Status.ACTIVE;
+import static de.fynnkoch.modules.resume.Status.INACTIVE;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static java.lang.String.format;
@@ -206,7 +208,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
             resumeCreateOrder.getDescription(),
             resumeCreateOrder.getLinkedin(),
             resumeCreateOrder.getGithub(),
-            Status.INACTIVE);
+            INACTIVE);
   }
 
   @Test
@@ -258,7 +260,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
             resumeUpdateOrder.getDescription(),
             resumeUpdateOrder.getLinkedin(),
             resumeUpdateOrder.getGithub(),
-            Status.INACTIVE);
+            INACTIVE);
   }
 
   @Test
@@ -298,6 +300,72 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
             .as(ProblemDetail.class);
 
     assertThat(problemDetail.getTitle()).isEqualTo("Entity has been modified");
+  }
+
+  @Test
+  public void toggleStatus_successInactive() {
+    final var savedResume = resumeRepository.save(resume());
+
+    final ResumeView updatedResume =
+        given()
+            .header(
+                IF_MODIFIED_SINCE,
+                ofPattern(ISO_DATETIME_FORMAT).format(savedResume.getLastModifiedAt()))
+            .contentType(JSON)
+            .patch(getFullPathVariable(RESUME_PATH + "/" + savedResume.getId()))
+            .then()
+            .statusCode(OK.value())
+            .extract()
+            .as(ResumeView.class);
+
+    assertThat(updatedResume.getStatus()).isEqualTo(ACTIVE);
+  }
+
+  @Test
+  public void toggleStatus_successActive() {
+    final var savedResume = resumeRepository.save(resume(ACTIVE));
+
+    final ResumeView updatedResume =
+        given()
+            .header(
+                IF_MODIFIED_SINCE,
+                ofPattern(ISO_DATETIME_FORMAT).format(savedResume.getLastModifiedAt()))
+            .contentType(JSON)
+            .patch(getFullPathVariable(RESUME_PATH + "/" + savedResume.getId()))
+            .then()
+            .statusCode(OK.value())
+            .extract()
+            .as(ResumeView.class);
+
+    assertThat(updatedResume.getStatus()).isEqualTo(INACTIVE);
+  }
+
+  @Test
+  public void toggleStatus_successRemoveOtherActiveResume() {
+    final var currentlyActiveResume = resumeRepository.save(resume(ACTIVE));
+    final var currentlyInactiveResume = resumeRepository.save(resume());
+
+    final ResumeView updatedResume =
+        given()
+            .header(
+                IF_MODIFIED_SINCE,
+                ofPattern(ISO_DATETIME_FORMAT).format(currentlyInactiveResume.getLastModifiedAt()))
+            .contentType(JSON)
+            .patch(getFullPathVariable(RESUME_PATH + "/" + currentlyInactiveResume.getId()))
+            .then()
+            .statusCode(OK.value())
+            .extract()
+            .as(ResumeView.class);
+
+    assertThat(
+            this.resumeRepository.findById(currentlyActiveResume.getId()).orElseThrow().getStatus())
+        .isEqualTo(INACTIVE);
+    assertThat(
+            this.resumeRepository
+                .findById(currentlyInactiveResume.getId())
+                .orElseThrow()
+                .getStatus())
+        .isEqualTo(ACTIVE);
   }
 
   @Test

@@ -35,6 +35,20 @@ public class ResumeService {
   }
 
   @Transactional
+  public Resume toggleStatus(@NonNull final Resume resume) {
+    if (resume.getStatus().equals(Status.INACTIVE)) {
+      final var activeResume = resumeRepository.findByStatusAndIsDeletedIsFalse(Status.ACTIVE);
+      if (activeResume.isPresent()) {
+        activeResume.get().setStatus(Status.INACTIVE);
+        resumeRepository.save(activeResume.get());
+      }
+    }
+
+    resume.setStatus(resume.getStatus().equals(Status.ACTIVE) ? Status.INACTIVE : Status.ACTIVE);
+    return resumeRepository.save(resume);
+  }
+
+  @Transactional
   public void delete(@NonNull final Resume resume) {
     resume.setIsDeleted(true);
     resumeRepository.save(resume);

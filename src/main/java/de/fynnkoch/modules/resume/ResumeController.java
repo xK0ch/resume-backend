@@ -49,6 +49,16 @@ public class ResumeController implements ResumeContract {
   }
 
   @Override
+  public ResumeView toggleStatus(
+      @NonNull final UUID resumeId, @NonNull final ZonedDateTime ifModifiedSince) {
+    final var existingResume = this.resumeService.getOne(resumeId);
+
+    checkIfUnmodifiedSince(resumeId, ifModifiedSince, existingResume);
+
+    return this.resumeMapper.toView(this.resumeService.toggleStatus(existingResume));
+  }
+
+  @Override
   public void delete(@NonNull final UUID resumeId, @NonNull final ZonedDateTime ifModifiedSince) {
     final var existingResume = this.resumeService.getOne(resumeId);
 
