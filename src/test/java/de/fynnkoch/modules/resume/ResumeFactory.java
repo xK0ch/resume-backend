@@ -1,9 +1,9 @@
 package de.fynnkoch.modules.resume;
 
-import static de.fynnkoch.core.models.Sex.DIVERSE;
-import static de.fynnkoch.core.models.Sex.FEMALE;
-import static de.fynnkoch.core.models.Sex.MALE;
-import static de.fynnkoch.core.models.Status.INACTIVE;
+import static de.fynnkoch.modules.resume.Sex.DIVERSE;
+import static de.fynnkoch.modules.resume.Sex.FEMALE;
+import static de.fynnkoch.modules.resume.Sex.MALE;
+import static de.fynnkoch.modules.resume.Status.INACTIVE;
 import static java.util.UUID.randomUUID;
 
 import java.time.LocalDate;

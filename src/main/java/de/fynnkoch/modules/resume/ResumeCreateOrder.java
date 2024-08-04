@@ -1,6 +1,5 @@
 package de.fynnkoch.modules.resume;
 
-import de.fynnkoch.core.models.Sex;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;

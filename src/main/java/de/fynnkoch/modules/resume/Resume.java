@@ -2,8 +2,6 @@ package de.fynnkoch.modules.resume;
 
 import static lombok.AccessLevel.PRIVATE;
 
-import de.fynnkoch.core.models.Sex;
-import de.fynnkoch.core.models.Status;
 import de.fynnkoch.core.models.AbstractEntity;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;

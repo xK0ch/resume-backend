@@ -3,8 +3,6 @@ package de.fynnkoch.modules.resume;
 import static lombok.AccessLevel.PRIVATE;
 
 import de.fynnkoch.core.models.AbstractEntityView;
-import de.fynnkoch.core.models.Sex;
-import de.fynnkoch.core.models.Status;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;

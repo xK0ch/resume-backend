@@ -1,6 +1,6 @@
 package de.fynnkoch.modules.resume;
 
-import static de.fynnkoch.core.EntityHelper.checkIfUnmodifiedSince;
+import static de.fynnkoch.core.helpers.EntityHelper.checkIfUnmodifiedSince;
 import static lombok.AccessLevel.PRIVATE;
 
 import java.time.ZonedDateTime;

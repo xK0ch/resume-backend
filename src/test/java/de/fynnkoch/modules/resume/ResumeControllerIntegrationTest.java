@@ -19,7 +19,6 @@ import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.PRECONDITION_FAILED;
 
 import de.fynnkoch.AbstractIntegrationTest;
-import de.fynnkoch.core.models.Status;
 import java.time.ZonedDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Test;

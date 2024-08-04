@@ -1,4 +1,4 @@
-package de.fynnkoch.core;
+package de.fynnkoch.core.helpers;
 
 import static java.lang.String.format;
 
