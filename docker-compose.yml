@@ -2,9 +2,7 @@ version: '3.9'
 
 services:
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     container_name: resume-backend
     depends_on:
       - database
@@ -15,11 +13,12 @@ services:
     image: resume-backend:latest
     ports:
       - "8080:8080"
+    restart: unless-stopped
 
   database:
     container_name: resume-database
-    image: postgres:16.3
     environment:
       POSTGRES_DB: resume-database
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: letmein
+    image: postgres:16.3

@@ -7,7 +7,9 @@ import static de.fynnkoch.core.models.Status.INACTIVE;
 import static java.util.UUID.randomUUID;
 
 import java.time.LocalDate;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class ResumeFactory {
 
   public static Resume resume() {
