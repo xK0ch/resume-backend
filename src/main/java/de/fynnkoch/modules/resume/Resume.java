@@ -43,9 +43,11 @@ public class Resume extends AbstractEntity {
 
   @NotNull @Column String country;
 
-  @NotNull @Column String phoneNumber;
+  @Nullable @Column String phoneNumber;
 
-  @NotNull @Column String email;
+  @Nullable @Column String mobileNumber;
+
+  @Nullable @Column String email;
 
   @NotNull @Column String description;
 

@@ -2,10 +2,9 @@ package de.fynnkoch.modules.resume;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Data;
-
-import java.time.LocalDate;
 
 @Data
 @Builder
@@ -27,9 +26,11 @@ public class ResumeUpdateOrder {
 
   @NotNull String country;
 
-  @NotNull String phoneNumber;
+  @Nullable String phoneNumber;
 
-  @NotNull String email;
+  @Nullable String mobileNumber;
+
+  @Nullable String email;
 
   @NotNull String description;
 

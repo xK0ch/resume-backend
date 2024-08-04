@@ -26,9 +26,11 @@ public class ResumeCreateOrder {
 
   @NotNull String country;
 
-  @NotNull String phoneNumber;
+  @Nullable String phoneNumber;
 
-  @NotNull String email;
+  @Nullable String mobileNumber;
+
+  @Nullable String email;
 
   @NotNull String description;
 

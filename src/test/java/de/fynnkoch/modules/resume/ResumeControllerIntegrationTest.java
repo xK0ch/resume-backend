@@ -189,6 +189,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
             ResumeView::getCity,
             ResumeView::getCountry,
             ResumeView::getPhoneNumber,
+            ResumeView::getMobileNumber,
             ResumeView::getEmail,
             ResumeView::getDescription,
             ResumeView::getLinkedin,
@@ -204,6 +205,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
             resumeCreateOrder.getCity(),
             resumeCreateOrder.getCountry(),
             resumeCreateOrder.getPhoneNumber(),
+            resumeCreateOrder.getMobileNumber(),
             resumeCreateOrder.getEmail(),
             resumeCreateOrder.getDescription(),
             resumeCreateOrder.getLinkedin(),
@@ -241,6 +243,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
             ResumeView::getCity,
             ResumeView::getCountry,
             ResumeView::getPhoneNumber,
+            ResumeView::getMobileNumber,
             ResumeView::getEmail,
             ResumeView::getDescription,
             ResumeView::getLinkedin,
@@ -256,6 +259,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
             resumeUpdateOrder.getCity(),
             resumeUpdateOrder.getCountry(),
             resumeUpdateOrder.getPhoneNumber(),
+            resumeUpdateOrder.getMobileNumber(),
             resumeUpdateOrder.getEmail(),
             resumeUpdateOrder.getDescription(),
             resumeUpdateOrder.getLinkedin(),
@@ -409,7 +413,9 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
 
     final ProblemDetail problemDetail =
         given()
-            .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(savedResume.getLastModifiedAt()))
+            .header(
+                IF_MODIFIED_SINCE,
+                ofPattern(ISO_DATETIME_FORMAT).format(savedResume.getLastModifiedAt()))
             .contentType(JSON)
             .patch(getFullPathVariable(format(RESUME_PATH, savedResume.getId())))
             .then()

@@ -19,26 +19,26 @@ import lombok.experimental.FieldDefaults;
 public class ResumeView extends AbstractEntityView {
 
   @NotNull
-  @Schema(description = "First name of the person")
+  @Schema(description = "First name of the resumes creator")
   String firstName;
 
   @NotNull
-  @Schema(description = "Last name of the person")
+  @Schema(description = "Last name of the resumes creator")
   String lastName;
 
   @NotNull
   @Schema(
-      description = "Sex of the person",
+      description = "Sex of the resumes creator",
       allowableValues = {"FEMALE", "DIVERSE", "MALE"})
   Sex sex;
 
   @NotNull
-  @Schema(description = "Date of birth of the person")
+  @Schema(description = "Date of birth of the resumes creator")
   LocalDate dateOfBirth;
 
   @NotNull
   @Schema(
-      description = "Address of the person including street and house number",
+      description = "Address of the resumes creator including street and house number",
       example = "Main Street 1")
   String address;
 
@@ -47,31 +47,35 @@ public class ResumeView extends AbstractEntityView {
   String postalCode;
 
   @NotNull
-  @Schema(description = "City where the person lives")
+  @Schema(description = "City where the resumes creator lives")
   String city;
 
   @NotNull
-  @Schema(description = "Country where the person lives")
+  @Schema(description = "Country where the resumes creator lives")
   String country;
 
   @NotNull
-  @Schema(description = "Phone number of the person")
+  @Schema(description = "Phone number of the resumes creator")
   String phoneNumber;
 
   @NotNull
-  @Schema(description = "Email address of the person")
+  @Schema(description = "Mobile number of the resumes creator")
+  String mobileNumber;
+
+  @NotNull
+  @Schema(description = "Email address of the resumes creator")
   String email;
 
   @NotNull
-  @Schema(description = "Description of the persons skills, interests and experiences")
+  @Schema(description = "Description of the resumes creators skills, interests and experiences")
   String description;
 
   @Nullable
-  @Schema(description = "LinkedIn profile URL of the person")
+  @Schema(description = "LinkedIn profile URL of the resumes creator")
   String linkedin;
 
   @Nullable
-  @Schema(description = "GitHub profile URL of the person")
+  @Schema(description = "GitHub profile URL of the resumes creator")
   String github;
 
   @NotNull
