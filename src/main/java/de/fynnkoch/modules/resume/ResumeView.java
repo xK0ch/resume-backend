@@ -54,15 +54,15 @@ public class ResumeView extends AbstractEntityView {
   @Schema(description = "Country where the resumes creator lives")
   String country;
 
-  @NotNull
+  @Nullable
   @Schema(description = "Phone number of the resumes creator")
   String phoneNumber;
 
-  @NotNull
+  @Nullable
   @Schema(description = "Mobile number of the resumes creator")
   String mobileNumber;
 
-  @NotNull
+  @Nullable
   @Schema(description = "Email address of the resumes creator")
   String email;
 

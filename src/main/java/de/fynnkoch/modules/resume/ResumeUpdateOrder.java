@@ -1,13 +1,17 @@
 package de.fynnkoch.modules.resume;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
+@FieldDefaults(level = PRIVATE)
 public class ResumeUpdateOrder {
 
   @NotNull String firstName;

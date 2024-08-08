@@ -1,6 +1,7 @@
 package de.fynnkoch.modules.resume;
 
 import static de.fynnkoch.modules.resume.ResumeFactory.resume;
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -13,7 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-public class ResumeUnitTest implements AbstractUnitTest {
+public class ResumeServiceUnitTest implements AbstractUnitTest {
 
   @Mock private ResumeRepository resumeRepository;
 
@@ -41,7 +42,7 @@ public class ResumeUnitTest implements AbstractUnitTest {
   @Test
   void getOne_failure() {
     when(resumeRepository.findByIdAndIsDeletedIsFalse(any())).thenReturn(Optional.empty());
-    assertThatThrownBy(() -> resumeService.getOne(resume().getId()))
+    assertThatThrownBy(() -> resumeService.getOne(randomUUID()))
         .isInstanceOf(ResumeNotFoundException.class);
   }
 
