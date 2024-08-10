@@ -1,0 +1,28 @@
+services:
+  backend:
+    build: .
+    container_name: resume-backend
+    depends_on:
+      - database
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/resume-database
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: letmein
+    image: resume-backend:latest
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  database:
+    container_name: resume-database
+    environment:
+      POSTGRES_DB: resume-database
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: letmein
+    image: postgres:16.3
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

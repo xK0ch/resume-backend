@@ -1,0 +1,57 @@
+# Resume backend
+
+## Introduction
+
+Spring boot project for creating a resume
+
+## Starting the application locally
+
+### Manuel start
+
+1. Make sure [***docker***](https://www.docker.com/) is installed & running
+2. To create the database container run:
+    ```bash
+    docker run --name resume-database-container -p 5433:5432 -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=letmein -e POSTGRES_DB=resume-database -d postgres:16.3
+    ```
+3. To start the application run:
+    ```bash
+    ./gradlew bootRun
+    ```
+
+### Compose start
+
+1. Make sure [***docker***](https://www.docker.com/) is installed & running
+2. Run:
+    ```bash
+    docker compose -f docker-compose-resume-backend.yml up --build
+    ```
+
+## Testing
+
+### Unit tests
+
+1. Run:
+   ```bash
+   ./gradlew test
+   ```
+
+### Integration tests
+
+1. Make sure [***docker***](https://www.docker.com/) is installed & running
+2. Run:
+   ```bash
+   ./gradlew integrationTest
+   ```
+
+## Documentation
+
+For the documentation of the REST API [***springdoc***](https://springdoc.org/)
+is used.
+
+### Swagger
+
+To see the Swagger documentation go [***here***](http://localhost:8080/docs/ui)
+
+### OpenAPI
+
+To see the OpenAPI specs go [***here***](http://localhost:8080/docs)

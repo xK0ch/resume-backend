@@ -1,0 +1,5 @@
+embedded:
+  postgresql:
+    enabled: true
+    docker-image: 'postgres:16.3'
+    wait-timeout-in-seconds: 160

@@ -1,0 +1,75 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+}
+
+group = "${group}"
+version = "${version}"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+}
+
+wrapper {
+    gradleVersion = "${gradleWrapperVersion}"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+dependencies {
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
+    runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
+
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+
+    implementation "org.flywaydb:flyway-core:${flywayVersion}"
+    implementation "org.flywaydb:flyway-database-postgresql:${flywayVersion}"
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+
+    testImplementation "com.playtika.testcontainers:embedded-postgresql:${testcontainersVersion}"
+    testImplementation "io.rest-assured:rest-assured:${restAssuredVersion}"
+    testImplementation "org.springframework.cloud:spring-cloud-starter-bootstrap"
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: "org.junit.vintage", module: "junit-vintage-engine"
+    }
+}
+
+test {
+    useJUnitPlatform()
+    exclude "**/*IntegrationTest"
+    testLogging.events = ["failed", "skipped", "passed"]
+
+    filter {
+        includeTestsMatching "*UnitTest"
+    }
+}
+
+tasks.register("integrationTest", Test) {
+    useJUnitPlatform()
+    exclude "**/*UnitTest"
+    minHeapSize = "128m"
+    testLogging.events = ["failed", "skipped", "passed"]
+
+    filter {
+        includeTestsMatching "*IntegrationTest"
+    }
+}
