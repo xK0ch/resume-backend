@@ -15,6 +15,12 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: true
+server:
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-password:
+    key-store-type: PKCS12
+    key-alias: resume-backend
 springdoc:
   api-docs:
     path: '/docs'

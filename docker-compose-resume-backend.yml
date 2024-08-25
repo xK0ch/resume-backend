@@ -12,6 +12,8 @@ services:
     ports:
       - "8080:8080"
     restart: unless-stopped
+    volumes:
+      - /etc/letsencrypt/live/fynn-koch.de/keystore.p12:/app/keystore.p12
 
   database:
     container_name: resume-database
