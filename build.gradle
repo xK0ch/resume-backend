@@ -35,22 +35,22 @@ dependencies {
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
 
     implementation "org.flywaydb:flyway-core:${flywayVersion}"
-    implementation "org.flywaydb:flyway-database-postgresql:${flywayVersion}"
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
-    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
-    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.flywaydb:flyway-database-postgresql:${flywayVersion}"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
 
     testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
     testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
 
-    testImplementation "com.playtika.testcontainers:embedded-postgresql:${testcontainersVersion}"
     testImplementation "io.rest-assured:rest-assured:${restAssuredVersion}"
-    testImplementation "org.springframework.cloud:spring-cloud-starter-bootstrap"
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude group: "org.junit.vintage", module: "junit-vintage-engine"
     }
+    testImplementation "org.springframework.cloud:spring-cloud-starter-bootstrap"
+    testImplementation "com.playtika.testcontainers:embedded-postgresql:${testcontainersVersion}"
 }
 
 test {
