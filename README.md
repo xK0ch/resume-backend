@@ -4,6 +4,19 @@
 
 Spring boot project for creating a resume
 
+## Environment variables
+
+In order to have your own basic authentication username & password some environment variables need to be set.
+
+1. Run the command:
+    ```bash
+   cp .env.example .env
+    ```
+2. Adjust the variables within the `.env` to your personal preference
+
+**Hint:** Even though it is not recommended this step can be skipped.
+There are already default values set within the application.
+
 ## Starting the application locally
 
 ### Manuel start
