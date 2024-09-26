@@ -19,6 +19,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.PRECONDITION_FAILED;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 import de.fynnkoch.AbstractIntegrationTest;
 import java.util.List;
@@ -167,7 +168,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
     assertThat(this.resumeRepository.findAll()).isEmpty();
 
     final ResumeView createdResume =
-        given()
+        givenAuthenticated()
             .contentType(JSON)
             .body(resumeCreateOrder)
             .post(getFullPathVariable(RESUMES_PATH))
@@ -214,13 +215,23 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
+  public void create_unauthorized() {
+    given()
+        .contentType(JSON)
+        .body(resumeCreateOrder())
+        .post(getFullPathVariable(RESUMES_PATH))
+        .then()
+        .statusCode(UNAUTHORIZED.value());
+  }
+
+  @Test
   public void update_success() {
     final var savedResume = resumeRepository.save(resume());
 
     final var resumeUpdateOrder = resumeUpdateOrder();
 
     final ResumeView updatedResume =
-        given()
+        givenAuthenticated()
             .header(
                 IF_MODIFIED_SINCE,
                 ofPattern(ISO_DATETIME_FORMAT).format(savedResume.getLastModifiedAt()))
@@ -272,7 +283,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
     final var resumeId = randomUUID();
 
     final ProblemDetail problemDetail =
-        given()
+        givenAuthenticated()
             .contentType(JSON)
             .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(now()))
             .body(resumeUpdateOrder())
@@ -288,10 +299,21 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
+  public void update_unauthorized() {
+    given()
+        .contentType(JSON)
+        .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(now()))
+        .body(resumeUpdateOrder())
+        .put(getFullPathVariable(format(RESUME_PATH, randomUUID())))
+        .then()
+        .statusCode(UNAUTHORIZED.value());
+  }
+
+  @Test
   public void update_modifiedSince() {
     final var savedResume = resumeRepository.save(resume());
 
-    given()
+    givenAuthenticated()
         .contentType(JSON)
         .header(
             IF_MODIFIED_SINCE,
@@ -302,7 +324,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
         .statusCode(OK.value());
 
     final ProblemDetail problemDetail =
-        given()
+        givenAuthenticated()
             .contentType(JSON)
             .header(
                 IF_MODIFIED_SINCE,
@@ -322,7 +344,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
     final var savedResume = resumeRepository.save(resume());
 
     final ResumeView updatedResume =
-        given()
+        givenAuthenticated()
             .header(
                 IF_MODIFIED_SINCE,
                 ofPattern(ISO_DATETIME_FORMAT).format(savedResume.getLastModifiedAt()))
@@ -341,7 +363,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
     final var savedResume = resumeRepository.save(resume(ACTIVE));
 
     final ResumeView updatedResume =
-        given()
+        givenAuthenticated()
             .header(
                 IF_MODIFIED_SINCE,
                 ofPattern(ISO_DATETIME_FORMAT).format(savedResume.getLastModifiedAt()))
@@ -361,7 +383,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
     final var currentlyInactiveResume = resumeRepository.save(resume());
 
     final ResumeView updatedResume =
-        given()
+        givenAuthenticated()
             .header(
                 IF_MODIFIED_SINCE,
                 ofPattern(ISO_DATETIME_FORMAT).format(currentlyInactiveResume.getLastModifiedAt()))
@@ -379,11 +401,21 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
+  public void toggleStatus_unauthorized() {
+    given()
+        .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(now()))
+        .contentType(JSON)
+        .patch(getFullPathVariable(format(RESUME_PATH, randomUUID())))
+        .then()
+        .statusCode(UNAUTHORIZED.value());
+  }
+
+  @Test
   public void toggleStatus_resumeNotFound() {
     final var resumeId = randomUUID();
 
     final ProblemDetail problemDetail =
-        given()
+        givenAuthenticated()
             .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(now()))
             .contentType(JSON)
             .patch(getFullPathVariable(format(RESUME_PATH, resumeId)))
@@ -401,7 +433,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
   public void toggleStatus_modifiedSince() {
     final var savedResume = resumeRepository.save(resume());
 
-    given()
+    givenAuthenticated()
         .contentType(JSON)
         .header(
             IF_MODIFIED_SINCE,
@@ -412,7 +444,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
         .statusCode(OK.value());
 
     final ProblemDetail problemDetail =
-        given()
+        givenAuthenticated()
             .header(
                 IF_MODIFIED_SINCE,
                 ofPattern(ISO_DATETIME_FORMAT).format(savedResume.getLastModifiedAt()))
@@ -430,7 +462,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
   public void delete_success() {
     final var savedResume = resumeRepository.save(resume());
 
-    given()
+    givenAuthenticated()
         .contentType(JSON)
         .header(
             IF_MODIFIED_SINCE,
@@ -445,10 +477,20 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
+  public void delete_unauthorized() {
+    given()
+        .contentType(JSON)
+        .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(now()))
+        .delete(getFullPathVariable(format(RESUME_PATH, randomUUID())))
+        .then()
+        .statusCode(UNAUTHORIZED.value());
+  }
+
+  @Test
   public void delete_modifiedSince() {
     final var savedResume = resumeRepository.save(resume());
 
-    given()
+    givenAuthenticated()
         .contentType(JSON)
         .header(
             IF_MODIFIED_SINCE,
@@ -459,7 +501,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
         .statusCode(OK.value());
 
     final ProblemDetail problemDetail =
-        given()
+        givenAuthenticated()
             .contentType(JSON)
             .header(
                 IF_MODIFIED_SINCE,

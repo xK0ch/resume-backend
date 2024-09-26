@@ -23,6 +23,7 @@ public class SkillController implements SkillContract {
 
   @Override
   public List<SkillView> getAllByResume(@NonNull final UUID resumeId) {
+    this.resumeService.getOne(resumeId);
     return this.skillService.getAllByResume(resumeId).stream()
         .map(this.skillMapper::toView)
         .toList();

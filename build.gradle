@@ -66,6 +66,7 @@ test {
 
 tasks.register("integrationTest", Test) {
     useJUnitPlatform()
+    group = "verification"
     exclude "**/*UnitTest"
     minHeapSize = "128m"
     testLogging.events = ["failed", "skipped", "passed"]

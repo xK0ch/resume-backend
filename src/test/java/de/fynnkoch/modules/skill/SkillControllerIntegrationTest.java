@@ -18,6 +18,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.PRECONDITION_FAILED;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 import de.fynnkoch.AbstractIntegrationTest;
 import de.fynnkoch.modules.resume.Resume;
@@ -64,24 +65,7 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
-  public void getAllByResume_noResume() {
-    this.skillRepository.save(skill(this.resume));
-
-    final List<SkillView> skill =
-        given()
-            .contentType(JSON)
-            .get(getFullPathVariable(format(SKILLS_PATH, randomUUID())))
-            .then()
-            .statusCode(OK.value())
-            .extract()
-            .jsonPath()
-            .getList("", SkillView.class);
-
-    assertThat(skill).isEmpty();
-  }
-
-  @Test
-  public void getAllByResume_noSkill() {
+  public void getAllByResume_withoutResults() {
     final List<SkillView> skill =
         given()
             .contentType(JSON)
@@ -96,11 +80,28 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
+  public void getAllByResume_resumeNotFound() {
+    final var resumeId = randomUUID();
+
+    final ProblemDetail problemDetail =
+        given()
+            .contentType(JSON)
+            .get(getFullPathVariable(format(SKILLS_PATH, resumeId)))
+            .then()
+            .statusCode(NOT_FOUND.value())
+            .extract()
+            .as(ProblemDetail.class);
+
+    assertThat(problemDetail.getDetail())
+        .isEqualTo(format("Resume with id %s not found", resumeId));
+  }
+
+  @Test
   public void create_success() {
     final var skillCreateOrder = skillCreateOrder();
 
     final SkillView createdSkill =
-        given()
+        givenAuthenticated()
             .contentType(JSON)
             .body(skillCreateOrder)
             .post(getFullPathVariable(format(SKILLS_PATH, this.resume.getId())))
@@ -117,11 +118,21 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
+  public void create_unauthorized() {
+    given()
+        .contentType(JSON)
+        .body(skillCreateOrder())
+        .post(getFullPathVariable(format(SKILLS_PATH, this.resume.getId())))
+        .then()
+        .statusCode(UNAUTHORIZED.value());
+  }
+
+  @Test
   public void create_resumeNotFound() {
     final var resumeId = randomUUID();
 
     final ProblemDetail problemDetail =
-        given()
+        givenAuthenticated()
             .contentType(JSON)
             .body(skillCreateOrder())
             .post(getFullPathVariable(format(SKILLS_PATH, resumeId)))
@@ -141,7 +152,7 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
     final var skillUpdateOrder = skillUpdateOrder();
 
     final SkillView updatedSkill =
-        given()
+        givenAuthenticated()
             .header(
                 IF_MODIFIED_SINCE,
                 ofPattern(ISO_DATETIME_FORMAT).format(existingSkill.getLastModifiedAt()))
@@ -164,7 +175,7 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
     final var resumeId = randomUUID();
 
     final ProblemDetail problemDetail =
-        given()
+        givenAuthenticated()
             .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(now()))
             .contentType(JSON)
             .body(skillUpdateOrder())
@@ -184,7 +195,7 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
     final var skillId = randomUUID();
 
     final ProblemDetail problemDetail =
-        given()
+        givenAuthenticated()
             .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(now()))
             .contentType(JSON)
             .body(skillUpdateOrder())
@@ -199,10 +210,21 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
+  public void update_unauthorized() {
+    given()
+        .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(now()))
+        .contentType(JSON)
+        .body(skillUpdateOrder())
+        .put(getFullPathVariable(format(SKILL_PATH, this.resume.getId(), randomUUID())))
+        .then()
+        .statusCode(UNAUTHORIZED.value());
+  }
+
+  @Test
   public void update_modifiedSince() {
     final var existingSkill = this.skillRepository.save(skill(this.resume));
 
-    given()
+    givenAuthenticated()
         .header(
             IF_MODIFIED_SINCE,
             ofPattern(ISO_DATETIME_FORMAT).format(existingSkill.getLastModifiedAt()))
@@ -213,7 +235,7 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
         .statusCode(OK.value());
 
     final ProblemDetail problemDetail =
-        given()
+        givenAuthenticated()
             .header(
                 IF_MODIFIED_SINCE,
                 ofPattern(ISO_DATETIME_FORMAT).format(existingSkill.getLastModifiedAt()))
@@ -233,7 +255,7 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
   public void delete_success() {
     final var existingSkill = this.skillRepository.save(skill(this.resume));
 
-    given()
+    givenAuthenticated()
         .header(
             IF_MODIFIED_SINCE,
             ofPattern(ISO_DATETIME_FORMAT).format(existingSkill.getLastModifiedAt()))
@@ -252,7 +274,7 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
     final var resumeId = randomUUID();
 
     final ProblemDetail problemDetail =
-        given()
+        givenAuthenticated()
             .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(now()))
             .contentType(JSON)
             .body(skillUpdateOrder())
@@ -268,10 +290,21 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
+  public void delete_unauthorized() {
+    given()
+        .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(now()))
+        .contentType(JSON)
+        .body(skillUpdateOrder())
+        .delete(getFullPathVariable(format(SKILL_PATH, randomUUID(), randomUUID())))
+        .then()
+        .statusCode(UNAUTHORIZED.value());
+  }
+
+  @Test
   public void delete_modifiedSince() {
     final var existingSkill = this.skillRepository.save(skill(this.resume));
 
-    given()
+    givenAuthenticated()
         .header(
             IF_MODIFIED_SINCE,
             ofPattern(ISO_DATETIME_FORMAT).format(existingSkill.getLastModifiedAt()))
@@ -282,7 +315,7 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
         .statusCode(OK.value());
 
     final ProblemDetail problemDetail =
-        given()
+        givenAuthenticated()
             .header(
                 IF_MODIFIED_SINCE,
                 ofPattern(ISO_DATETIME_FORMAT).format(existingSkill.getLastModifiedAt()))
