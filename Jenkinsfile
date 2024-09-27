@@ -5,6 +5,11 @@ pipeline {
         pollSCM('H * * * *')
     }
 
+    environment {
+        SPRING_SECURITY_USERNAME = credentials('resume-backend-username')
+        SPRING_SECURITY_PASSWORD = credentials('resume-backend-password')
+    }
+
     stages {
         stage('Build') {
             steps {
