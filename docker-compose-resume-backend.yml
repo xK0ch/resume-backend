@@ -8,6 +8,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/resume-database
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: letmein
+      BASIC_AUTH_USERNAME: ${BASIC_AUTH_USERNAME}
+      BASIC_AUTH_PASSWORD: ${BASIC_AUTH_PASSWORD}
     image: resume-backend:latest
     ports:
       - "8080:8080"

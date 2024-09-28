@@ -6,8 +6,8 @@ pipeline {
     }
 
     environment {
-        RESUME_BACKEND_USERNAME = credentials('resume-backend-username')
-        RESUME_BACKEND_PASSWORD = credentials('resume-backend-password')
+        BASIC_AUTH_USERNAME = credentials('resume-backend-username')
+        BASIC_AUTH_PASSWORD = credentials('resume-backend-password')
     }
 
     stages {
@@ -27,7 +27,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    withEnv(["RESUME_BACKEND_USERNAME=${RESUME_BACKEND_USERNAME}", "RESUME_BACKEND_PASSWORD=${RESUME_BACKEND_PASSWORD}"]) {
+                    withEnv(["BASIC_AUTH_USERNAME=${BASIC_AUTH_USERNAME}", "BASIC_AUTH_PASSWORD=${BASIC_AUTH_PASSWORD}"]) {
                         sh """
                             docker compose -f docker-compose-resume-backend.yml down
                             docker image prune -af

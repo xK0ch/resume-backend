@@ -21,10 +21,10 @@ import org.springframework.web.cors.CorsConfiguration;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-  @Value("${login.username}")
+  @Value("${basic-auth.username}")
   private String username;
 
-  @Value("${login.password}")
+  @Value("${basic-auth.password}")
   private String password;
 
   @Bean

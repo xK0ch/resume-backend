@@ -21,6 +21,6 @@ springdoc:
   swagger-ui:
     path: '/docs/ui'
 
-login:
-  username: ${RESUME_BACKEND_USERNAME:admin}
-  password: ${RESUME_BACKEND_PASSWORD:admin}
+basic-auth:
+  username: admin
+  password: admin

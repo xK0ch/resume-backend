@@ -17,10 +17,10 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public class AbstractIntegrationTest {
 
-  @Value("${login.username}")
+  @Value("${basic-auth.username}")
   private String username;
 
-  @Value("${login.password}")
+  @Value("${basic-auth.password}")
   private String password;
 
   @LocalServerPort private int port;
