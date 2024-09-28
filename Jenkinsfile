@@ -26,11 +26,15 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'export SPRING_SECURITY_USERNAME=${SPRING_SECURITY_USERNAME}'
-                sh 'export SPRING_SECURITY_PASSWORD=${SPRING_SECURITY_PASSWORD}'
-                sh 'docker compose -f docker-compose-resume-backend.yml down'
-                sh 'docker image prune -af'
-                sh 'docker compose -f docker-compose-resume-backend.yml up --build -d'
+                script {
+                    withEnv(["SPRING_SECURITY_USERNAME=${SPRING_SECURITY_USERNAME}", "SPRING_SECURITY_PASSWORD=${SPRING_SECURITY_PASSWORD}"]) {
+                        sh """
+                            docker compose -f docker-compose-resume-backend.yml down
+                            docker image prune -af
+                            docker compose -f docker-compose-resume-backend.yml up --build -d
+                        """
+                    }
+                }
             }
         }
     }
