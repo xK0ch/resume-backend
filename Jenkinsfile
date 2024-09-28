@@ -28,11 +28,9 @@ pipeline {
             steps {
                 script {
                     withEnv(["BASIC_AUTH_USERNAME=${BASIC_AUTH_USERNAME}", "BASIC_AUTH_PASSWORD=${BASIC_AUTH_PASSWORD}"]) {
-                        sh """
-                            docker compose -f docker-compose-resume-backend.yml down
-                            docker image prune -af
-                            docker compose -f docker-compose-resume-backend.yml up --build -d
-                        """
+                        sh 'docker compose -f docker-compose-resume-backend.yml down'
+                        sh 'docker image prune -af'
+                        sh 'docker compose -f docker-compose-resume-backend.yml up --build -d'
                     }
                 }
             }
