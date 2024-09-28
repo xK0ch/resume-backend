@@ -22,5 +22,5 @@ springdoc:
     path: '/docs/ui'
 
 login:
-  username: ${SPRING_SECURITY_USERNAME:admin}
-  password: ${SPRING_SECURITY_PASSWORD:admin}
+  username: ${RESUME_BACKEND_USERNAME:admin}
+  password: ${RESUME_BACKEND_PASSWORD:admin}
