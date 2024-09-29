@@ -13,7 +13,7 @@ services:
       SPRING_PROFILES_ACTIVE: prod
     image: resume-backend:latest
     networks:
-      - test-network
+      - resume-network
     ports:
       - "8443:8443"
     restart: unless-stopped
@@ -28,7 +28,7 @@ services:
       POSTGRES_PASSWORD: letmein
     image: postgres:16.3
     networks:
-      - test-network
+      - resume-network
     restart: unless-stopped
     volumes:
       - pgdata:/var/lib/postgresql/data
@@ -37,4 +37,5 @@ volumes:
   pgdata:
 
 networks:
-  test-network:
+  resume-network:
+    external: true
