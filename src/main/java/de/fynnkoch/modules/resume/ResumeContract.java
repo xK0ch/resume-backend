@@ -76,7 +76,7 @@ public interface ResumeContract {
       @RequestHeader(IF_MODIFIED_SINCE) @DateTimeFormat(pattern = ISO_DATETIME_FORMAT)
           final ZonedDateTime ifModifiedSince);
 
-  @PatchMapping("/{resumeId}")
+  @PatchMapping("/{resumeId}/toggle-status")
   @Transactional
   @ResponseStatus(OK)
   @OkayResponse(description = "If the status of the resume has been toggled successfully.")

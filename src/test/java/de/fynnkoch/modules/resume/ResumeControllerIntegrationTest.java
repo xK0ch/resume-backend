@@ -31,6 +31,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
 
   private static final String RESUME_PATH = "/resumes/%s";
   private static final String RESUMES_PATH = "/resumes";
+  private static final String RESUME_TOGGLE_STATUS_PATH = RESUME_PATH + "/toggle-status";
 
   @Autowired private ResumeRepository resumeRepository;
 
@@ -349,7 +350,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
                 IF_MODIFIED_SINCE,
                 ofPattern(ISO_DATETIME_FORMAT).format(savedResume.getLastModifiedAt()))
             .contentType(JSON)
-            .patch(getFullPathVariable(format(RESUME_PATH, savedResume.getId())))
+            .patch(getFullPathVariable(format(RESUME_TOGGLE_STATUS_PATH, savedResume.getId())))
             .then()
             .statusCode(OK.value())
             .extract()
@@ -368,7 +369,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
                 IF_MODIFIED_SINCE,
                 ofPattern(ISO_DATETIME_FORMAT).format(savedResume.getLastModifiedAt()))
             .contentType(JSON)
-            .patch(getFullPathVariable(format(RESUME_PATH, savedResume.getId())))
+            .patch(getFullPathVariable(format(RESUME_TOGGLE_STATUS_PATH, savedResume.getId())))
             .then()
             .statusCode(OK.value())
             .extract()
@@ -388,7 +389,9 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
                 IF_MODIFIED_SINCE,
                 ofPattern(ISO_DATETIME_FORMAT).format(currentlyInactiveResume.getLastModifiedAt()))
             .contentType(JSON)
-            .patch(getFullPathVariable(format(RESUME_PATH, currentlyInactiveResume.getId())))
+            .patch(
+                getFullPathVariable(
+                    format(RESUME_TOGGLE_STATUS_PATH, currentlyInactiveResume.getId())))
             .then()
             .statusCode(OK.value())
             .extract()
@@ -405,7 +408,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
     given()
         .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(now()))
         .contentType(JSON)
-        .patch(getFullPathVariable(format(RESUME_PATH, randomUUID())))
+        .patch(getFullPathVariable(format(RESUME_TOGGLE_STATUS_PATH, randomUUID())))
         .then()
         .statusCode(UNAUTHORIZED.value());
   }
@@ -418,7 +421,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
         givenAuthenticated()
             .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(now()))
             .contentType(JSON)
-            .patch(getFullPathVariable(format(RESUME_PATH, resumeId)))
+            .patch(getFullPathVariable(format(RESUME_TOGGLE_STATUS_PATH, resumeId)))
             .then()
             .statusCode(NOT_FOUND.value())
             .extract()
@@ -449,7 +452,7 @@ public class ResumeControllerIntegrationTest extends AbstractIntegrationTest {
                 IF_MODIFIED_SINCE,
                 ofPattern(ISO_DATETIME_FORMAT).format(savedResume.getLastModifiedAt()))
             .contentType(JSON)
-            .patch(getFullPathVariable(format(RESUME_PATH, savedResume.getId())))
+            .patch(getFullPathVariable(format(RESUME_TOGGLE_STATUS_PATH, savedResume.getId())))
             .then()
             .statusCode(PRECONDITION_FAILED.value())
             .extract()
