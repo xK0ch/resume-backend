@@ -13,7 +13,6 @@ services:
       SPRING_PROFILES_ACTIVE: prod
     image: resume-backend:latest
     ports:
-      - "8080:8080"
       - "8443:8443"
     restart: unless-stopped
     volumes:
