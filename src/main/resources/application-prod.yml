@@ -1,0 +1,38 @@
+server:
+  port: 8443
+  ssl:
+    enabled: true
+    key-store-type: PEM
+    key-store: /etc/letsencrypt/live/fynn-koch.de/fullchain.pem
+    key-store-password: ''
+    key-alias: ''
+    key-password: ''
+    key-store-provider: SunJSSE
+    key-password-provider: file:/etc/letsencrypt/live/fynn-koch.de/privkey.pem
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/resume-database
+    username: admin
+    password: letmein
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    baseline-version: 1
+    locations: classpath:db
+    clean-on-validation-error: false
+    connect-retries: 5
+    enabled: true
+    baseline-on-migrate: true
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+springdoc:
+  api-docs:
+    path: '/docs'
+  swagger-ui:
+    path: '/docs/ui'
+
+basic-auth:
+  username: admin
+  password: admin

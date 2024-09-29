@@ -1,0 +1,35 @@
+services:
+  backend:
+    build: .
+    container_name: resume-backend
+    depends_on:
+      - database
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/resume-database
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: letmein
+      BASIC_AUTH_USERNAME: ${BASIC_AUTH_USERNAME}
+      BASIC_AUTH_PASSWORD: ${BASIC_AUTH_PASSWORD}
+      SPRING_PROFILES_ACTIVE: prod
+    image: resume-backend:latest
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    restart: unless-stopped
+    volumes:
+      - /etc/letsencrypt/live/fynn-koch.de/fullchain.pem:/etc/letsencrypt/live/fynn-koch.de/fullchain.pem:ro
+      - /etc/letsencrypt/live/fynn-koch.de/privkey.pem:/etc/letsencrypt/live/fynn-koch.de/privkey.pem:ro
+
+  database:
+    container_name: resume-database
+    environment:
+      POSTGRES_DB: resume-database
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: letmein
+    image: postgres:16.3
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
