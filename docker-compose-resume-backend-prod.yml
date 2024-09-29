@@ -17,8 +17,7 @@ services:
       - "8443:8443"
     restart: unless-stopped
     volumes:
-      - /etc/letsencrypt/live/fynn-koch.de/fullchain.pem:/etc/letsencrypt/live/fynn-koch.de/fullchain.pem:ro
-      - /etc/letsencrypt/live/fynn-koch.de/privkey.pem:/etc/letsencrypt/live/fynn-koch.de/privkey.pem:ro
+      - /etc/letsencrypt/live/fynn-koch.de/keystore.p12:/etc/letsencrypt/live/fynn-koch.de/keystore.p12:ro
 
   database:
     container_name: resume-database
