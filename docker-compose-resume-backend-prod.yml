@@ -12,8 +12,6 @@ services:
       BASIC_AUTH_PASSWORD: ${BASIC_AUTH_PASSWORD}
       SPRING_PROFILES_ACTIVE: prod
     image: resume-backend:latest
-    networks:
-      - resume-network
     ports:
       - "8443:8443"
     restart: unless-stopped
@@ -27,15 +25,9 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: letmein
     image: postgres:16.3
-    networks:
-      - resume-network
     restart: unless-stopped
     volumes:
       - pgdata:/var/lib/postgresql/data
 
 volumes:
   pgdata:
-
-networks:
-  resume-network:
-    external: true
