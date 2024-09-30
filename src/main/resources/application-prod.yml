@@ -29,6 +29,7 @@ springdoc:
     path: '/docs'
   swagger-ui:
     path: '/docs/ui'
+    operations-sorter: method
 
 basic-auth:
   username: admin
