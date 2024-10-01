@@ -1,7 +1,5 @@
 server:
   port: 8443
-  servlet:
-    context-path: /api
   ssl:
     enabled: true
     key-store: /etc/letsencrypt/live/fynn-koch.de/keystore.p12
