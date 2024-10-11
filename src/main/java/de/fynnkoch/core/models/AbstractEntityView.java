@@ -2,7 +2,6 @@ package de.fynnkoch.core.models;
 
 import static lombok.AccessLevel.PRIVATE;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
@@ -12,7 +11,6 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @FieldDefaults(level = PRIVATE)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class AbstractEntityView {
 
   @NotNull
