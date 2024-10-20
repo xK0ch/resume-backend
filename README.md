@@ -24,7 +24,7 @@ There are already default values set within the application.
 1. Make sure [***docker***](https://www.docker.com/) is installed & running
 2. To create the database container run:
     ```bash
-    docker run --name resume-database-container -p 5433:5432 -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=letmein -e POSTGRES_DB=resume-database -d postgres:16.3
+    docker run --name resume-database-container -p 5433:5432 -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=letmein -e POSTGRES_DB=resume-database -d postgres:17.0
     ```
 3. To start the application run:
     ```bash
