@@ -5,6 +5,7 @@ import static org.springframework.http.HttpHeaders.IF_MODIFIED_SINCE;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import de.fynnkoch.core.docs.CreatedResponse;
 import de.fynnkoch.core.docs.NoContentResponse;
@@ -33,14 +34,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @RequestMapping("/resumes")
 public interface ResumeContract {
 
-  @GetMapping
+  @GetMapping(produces = APPLICATION_JSON_VALUE)
   @Transactional(readOnly = true)
   @ResponseStatus(OK)
   @OkayResponse(description = "If the resumes have been loaded successfully.")
   @Operation(summary = "Get all resumes", tags = "Resumes")
   List<ResumeView> getAll();
 
-  @GetMapping("/{resumeId}")
+  @GetMapping(value = "/{resumeId}", produces = APPLICATION_JSON_VALUE)
   @Transactional(readOnly = true)
   @ResponseStatus(OK)
   @OkayResponse(description = "If the resume has been loaded successfully.")
@@ -48,7 +49,7 @@ public interface ResumeContract {
   @Operation(summary = "Get a resume", tags = "Resumes")
   ResumeView getOne(@PathVariable final UUID resumeId);
 
-  @PostMapping
+  @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
   @Transactional
   @ResponseStatus(CREATED)
   @CreatedResponse(description = "If the resume has been created successfully.")
@@ -59,7 +60,10 @@ public interface ResumeContract {
       security = @SecurityRequirement(name = "basicAuth"))
   ResumeView create(@RequestBody final ResumeCreateOrder resumeView);
 
-  @PutMapping("/{resumeId}")
+  @PutMapping(
+      value = "/{resumeId}",
+      consumes = APPLICATION_JSON_VALUE,
+      produces = APPLICATION_JSON_VALUE)
   @Transactional
   @ResponseStatus(OK)
   @OkayResponse(description = "If the resume has been updated successfully.")
@@ -76,7 +80,7 @@ public interface ResumeContract {
       @RequestHeader(IF_MODIFIED_SINCE) @DateTimeFormat(pattern = ISO_DATETIME_FORMAT)
           final ZonedDateTime ifModifiedSince);
 
-  @PatchMapping("/{resumeId}/toggle-status")
+  @PatchMapping(value = "/{resumeId}/toggle-status", produces = APPLICATION_JSON_VALUE)
   @Transactional
   @ResponseStatus(OK)
   @OkayResponse(description = "If the status of the resume has been toggled successfully.")
@@ -94,7 +98,7 @@ public interface ResumeContract {
       @RequestHeader(IF_MODIFIED_SINCE) @DateTimeFormat(pattern = ISO_DATETIME_FORMAT)
           final ZonedDateTime ifModifiedSince);
 
-  @DeleteMapping("/{resumeId}")
+  @DeleteMapping(value = "/{resumeId}", produces = APPLICATION_JSON_VALUE)
   @Transactional
   @ResponseStatus(NO_CONTENT)
   @NoContentResponse(description = "If the resume has been deleted successfully.")

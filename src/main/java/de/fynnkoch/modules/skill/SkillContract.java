@@ -5,6 +5,7 @@ import static org.springframework.http.HttpHeaders.IF_MODIFIED_SINCE;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import de.fynnkoch.core.docs.CreatedResponse;
 import de.fynnkoch.core.docs.NoContentResponse;
@@ -32,7 +33,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @RequestMapping("/resumes/{resumeId}/skills")
 public interface SkillContract {
 
-  @GetMapping
+  @GetMapping(produces = APPLICATION_JSON_VALUE)
   @Transactional(readOnly = true)
   @ResponseStatus(OK)
   @OkayResponse(description = "If the skills have been loaded successfully.")
@@ -40,7 +41,7 @@ public interface SkillContract {
   @Operation(summary = "Get all skills of a resume", tags = "Skills")
   List<SkillView> getAllByResume(@PathVariable final UUID resumeId);
 
-  @PostMapping
+  @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
   @Transactional
   @ResponseStatus(CREATED)
   @CreatedResponse(description = "If the skill has been created successfully.")
@@ -53,7 +54,10 @@ public interface SkillContract {
   SkillView create(
       @PathVariable final UUID resumeId, @RequestBody final SkillCreateOrder skillCreateOrder);
 
-  @PutMapping("/{skillId}")
+  @PutMapping(
+      value = "/{skillId}",
+      consumes = APPLICATION_JSON_VALUE,
+      produces = APPLICATION_JSON_VALUE)
   @Transactional
   @ResponseStatus(OK)
   @OkayResponse(description = "If the skill has been updated successfully.")
@@ -71,7 +75,7 @@ public interface SkillContract {
       @RequestHeader(IF_MODIFIED_SINCE) @DateTimeFormat(pattern = ISO_DATETIME_FORMAT)
           final ZonedDateTime ifModifiedSince);
 
-  @DeleteMapping("/{skillId}")
+  @DeleteMapping(value = "/{skillId}", produces = APPLICATION_JSON_VALUE)
   @Transactional
   @ResponseStatus(NO_CONTENT)
   @NoContentResponse(description = "If the skill has been deleted successfully.")
