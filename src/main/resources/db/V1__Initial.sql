@@ -16,7 +16,7 @@ CREATE TABLE resume
     phone_number     VARCHAR(255) NULL,
     mobile_number    VARCHAR(255) NULL,
     email            VARCHAR(255) NULL,
-    description      VARCHAR(255)             NOT NULL,
+    description      TEXT                     NOT NULL,
     linkedin         VARCHAR(255) NULL,
     github           VARCHAR(255) NULL,
     status           VARCHAR(255)             NOT NULL
