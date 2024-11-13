@@ -23,6 +23,6 @@ public class SkillView extends AbstractEntityView {
   @NotNull
   @Schema(
       description = "Level of the skill",
-      allowableValues = {"FEMALE", "DIVERSE", "MALE"})
+      allowableValues = {"NOVICE", "ADVANCED_BEGINNER", "INTERMEDIATE", "ADVANCED", "EXPERT"})
   SkillLevel skillLevel;
 }
