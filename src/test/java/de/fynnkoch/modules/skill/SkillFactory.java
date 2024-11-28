@@ -1,6 +1,10 @@
 package de.fynnkoch.modules.skill;
 
 import static de.fynnkoch.modules.resume.ResumeFactory.resume;
+import static de.fynnkoch.modules.skill.SkillCategory.OPERATING_SYSTEM;
+import static de.fynnkoch.modules.skill.SkillLevel.ADVANCED;
+import static de.fynnkoch.modules.skill.SkillLevel.EXPERT;
+import static de.fynnkoch.modules.skill.SkillLevel.INTERMEDIATE;
 import static java.util.UUID.randomUUID;
 
 import de.fynnkoch.modules.resume.Resume;
@@ -14,7 +18,8 @@ public class SkillFactory {
         .id(randomUUID())
         .isDeleted(false)
         .name("Spring Boot")
-        .skillLevel(SkillLevel.EXPERT)
+        .skillLevel(EXPERT)
+        .skillCategory(OPERATING_SYSTEM)
         .resume(resume())
         .build();
   }
@@ -26,10 +31,18 @@ public class SkillFactory {
   }
 
   public static SkillCreateOrder skillCreateOrder() {
-    return SkillCreateOrder.builder().name("Angular").skillLevel(SkillLevel.ADVANCED).build();
+    return SkillCreateOrder.builder()
+        .name("Angular")
+        .skillLevel(ADVANCED)
+        .skillCategory(OPERATING_SYSTEM)
+        .build();
   }
 
   public static SkillUpdateOrder skillUpdateOrder() {
-    return SkillUpdateOrder.builder().name("React").skillLevel(SkillLevel.INTERMEDIATE).build();
+    return SkillUpdateOrder.builder()
+        .name("React")
+        .skillLevel(INTERMEDIATE)
+        .skillCategory(OPERATING_SYSTEM)
+        .build();
   }
 }

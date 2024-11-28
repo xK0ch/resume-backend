@@ -14,5 +14,7 @@ public class SkillUpdateOrder {
 
   @NotNull String name;
 
+  @NotNull SkillCategory skillCategory;
+
   @NotNull SkillLevel skillLevel;
 }

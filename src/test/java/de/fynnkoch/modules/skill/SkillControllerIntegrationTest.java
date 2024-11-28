@@ -60,8 +60,8 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
 
     assertThat(skill).hasSize(1);
     assertThat(skill.getFirst())
-        .extracting(SkillView::getName, SkillView::getSkillLevel)
-        .containsExactly(skill().getName(), skill().getSkillLevel());
+        .extracting(SkillView::getName, SkillView::getSkillCategory, SkillView::getSkillLevel)
+        .containsExactly(skill().getName(), skill().getSkillCategory(), skill().getSkillLevel());
   }
 
   @Test
@@ -113,8 +113,11 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
     assertThat(this.resumeRepository.findAll()).hasSize(1);
 
     assertThat(createdSkill)
-        .extracting(SkillView::getName, SkillView::getSkillLevel)
-        .containsExactly(skillCreateOrder.getName(), skillCreateOrder.getSkillLevel());
+        .extracting(SkillView::getName, SkillView::getSkillCategory, SkillView::getSkillLevel)
+        .containsExactly(
+            skillCreateOrder.getName(),
+            skillCreateOrder.getSkillCategory(),
+            skillCreateOrder.getSkillLevel());
   }
 
   @Test
@@ -166,8 +169,11 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
             .as(SkillView.class);
 
     assertThat(updatedSkill)
-        .extracting(SkillView::getName, SkillView::getSkillLevel)
-        .containsExactly(skillUpdateOrder.getName(), skillUpdateOrder.getSkillLevel());
+        .extracting(SkillView::getName, SkillView::getSkillCategory, SkillView::getSkillLevel)
+        .containsExactly(
+            skillUpdateOrder.getName(),
+            skillUpdateOrder.getSkillCategory(),
+            skillUpdateOrder.getSkillLevel());
   }
 
   @Test

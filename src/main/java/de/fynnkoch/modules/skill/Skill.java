@@ -31,6 +31,11 @@ public class Skill extends AbstractEntity {
   @NotNull
   @Column
   @Enumerated(EnumType.STRING)
+  SkillCategory skillCategory;
+
+  @NotNull
+  @Column
+  @Enumerated(EnumType.STRING)
   SkillLevel skillLevel;
 
   @NotNull
