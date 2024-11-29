@@ -28,8 +28,8 @@ public class SkillView extends AbstractEntityView {
         "CLOUD",
         "FRAMEWORK",
         "OPERATING_SYSTEM",
+        "OTHER",
         "PROGRAMMING_LANGUAGE",
-        "TOOL"
       })
   SkillCategory skillCategory;
 

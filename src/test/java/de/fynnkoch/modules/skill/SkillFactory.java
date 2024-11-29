@@ -2,6 +2,7 @@ package de.fynnkoch.modules.skill;
 
 import static de.fynnkoch.modules.resume.ResumeFactory.resume;
 import static de.fynnkoch.modules.skill.SkillCategory.OPERATING_SYSTEM;
+import static de.fynnkoch.modules.skill.SkillCategory.OTHER;
 import static de.fynnkoch.modules.skill.SkillLevel.ADVANCED;
 import static de.fynnkoch.modules.skill.SkillLevel.EXPERT;
 import static de.fynnkoch.modules.skill.SkillLevel.INTERMEDIATE;
@@ -42,7 +43,7 @@ public class SkillFactory {
     return SkillUpdateOrder.builder()
         .name("React")
         .skillLevel(INTERMEDIATE)
-        .skillCategory(OPERATING_SYSTEM)
+        .skillCategory(OTHER)
         .build();
   }
 }
