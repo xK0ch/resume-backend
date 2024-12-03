@@ -1,10 +1,10 @@
-package de.fynnkoch.modules.skill;
+package de.fynnkoch.modules.timelineevent;
 
 import static de.fynnkoch.core.Constants.ISO_DATETIME_FORMAT;
 import static de.fynnkoch.modules.resume.ResumeFactory.resume;
-import static de.fynnkoch.modules.skill.SkillFactory.skill;
-import static de.fynnkoch.modules.skill.SkillFactory.skillCreateOrder;
-import static de.fynnkoch.modules.skill.SkillFactory.skillUpdateOrder;
+import static de.fynnkoch.modules.timelineevent.TimelineEventFactory.timelineEvent;
+import static de.fynnkoch.modules.timelineevent.TimelineEventFactory.timelineEventCreateOrder;
+import static de.fynnkoch.modules.timelineevent.TimelineEventFactory.timelineEventUpdateOrder;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static java.lang.String.format;
@@ -29,12 +29,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ProblemDetail;
 
-public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
+public class TimelineEventControllerIntegrationTest extends AbstractIntegrationTest {
 
-  private static final String SKILL_PATH = "/resumes/%s/skills/%s";
-  private static final String SKILLS_PATH = "/resumes/%s/skills";
+  private static final String TIMELINE_EVENT_PATH = "/resumes/%s/timeline-events/%s";
+  private static final String TIMELINE_EVENTS_PATH = "/resumes/%s/timeline-events";
 
-  @Autowired private SkillRepository skillRepository;
+  @Autowired private TimelineEventRepository timelineEventRepository;
   @Autowired private ResumeRepository resumeRepository;
 
   private Resume resume;
@@ -46,37 +46,45 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   public void getAllByResume_success() {
-    final var skill = this.skillRepository.save(skill(this.resume));
+    final var timelineEvent = this.timelineEventRepository.save(timelineEvent(this.resume));
 
-    final List<SkillView> skills =
+    final List<TimelineEventView> timelineEvents =
         given()
             .contentType(JSON)
-            .get(getFullPathVariable(format(SKILLS_PATH, this.resume.getId())))
+            .get(getFullPathVariable(format(TIMELINE_EVENTS_PATH, this.resume.getId())))
             .then()
             .statusCode(OK.value())
             .extract()
             .jsonPath()
-            .getList("", SkillView.class);
+            .getList("", TimelineEventView.class);
 
-    assertThat(skills).hasSize(1);
-    assertThat(skills.getFirst())
-        .extracting(SkillView::getName, SkillView::getSkillCategory, SkillView::getSkillLevel)
-        .containsExactly(skill.getName(), skill.getSkillCategory(), skill.getSkillLevel());
+    assertThat(timelineEvents).hasSize(1);
+    assertThat(timelineEvents.getFirst())
+        .extracting(
+            TimelineEventView::getJobPosition,
+            TimelineEventView::getInstitution,
+            TimelineEventView::getDescription,
+            TimelineEventView::getDateOfEvent)
+        .containsExactly(
+            timelineEvent.getJobPosition(),
+            timelineEvent.getInstitution(),
+            timelineEvent.getDescription(),
+            timelineEvent.getDateOfEvent());
   }
 
   @Test
   public void getAllByResume_withoutResults() {
-    final List<SkillView> skills =
+    final List<TimelineEventView> timelineEvent =
         given()
             .contentType(JSON)
-            .get(getFullPathVariable(format(SKILLS_PATH, this.resume.getId())))
+            .get(getFullPathVariable(format(TIMELINE_EVENTS_PATH, this.resume.getId())))
             .then()
             .statusCode(OK.value())
             .extract()
             .jsonPath()
-            .getList("", SkillView.class);
+            .getList("", TimelineEventView.class);
 
-    assertThat(skills).isEmpty();
+    assertThat(timelineEvent).isEmpty();
   }
 
   @Test
@@ -86,7 +94,7 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
     final ProblemDetail problemDetail =
         given()
             .contentType(JSON)
-            .get(getFullPathVariable(format(SKILLS_PATH, resumeId)))
+            .get(getFullPathVariable(format(TIMELINE_EVENTS_PATH, resumeId)))
             .then()
             .statusCode(NOT_FOUND.value())
             .extract()
@@ -98,34 +106,39 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   public void create_success() {
-    final var skillCreateOrder = skillCreateOrder();
+    final var timelineEventCreateOrder = timelineEventCreateOrder();
 
-    final SkillView createdSkill =
+    final TimelineEventView createdTimelineEvent =
         givenAuthenticated()
             .contentType(JSON)
-            .body(skillCreateOrder)
-            .post(getFullPathVariable(format(SKILLS_PATH, this.resume.getId())))
+            .body(timelineEventCreateOrder)
+            .post(getFullPathVariable(format(TIMELINE_EVENTS_PATH, this.resume.getId())))
             .then()
             .statusCode(CREATED.value())
             .extract()
-            .as(SkillView.class);
+            .as(TimelineEventView.class);
 
     assertThat(this.resumeRepository.findAll()).hasSize(1);
 
-    assertThat(createdSkill)
-        .extracting(SkillView::getName, SkillView::getSkillCategory, SkillView::getSkillLevel)
+    assertThat(createdTimelineEvent)
+        .extracting(
+            TimelineEventView::getJobPosition,
+            TimelineEventView::getInstitution,
+            TimelineEventView::getDescription,
+            TimelineEventView::getDateOfEvent)
         .containsExactly(
-            skillCreateOrder.getName(),
-            skillCreateOrder.getSkillCategory(),
-            skillCreateOrder.getSkillLevel());
+            timelineEventCreateOrder.getJobPosition(),
+            timelineEventCreateOrder.getInstitution(),
+            timelineEventCreateOrder.getDescription(),
+            timelineEventCreateOrder.getDateOfEvent());
   }
 
   @Test
   public void create_unauthorized() {
     given()
         .contentType(JSON)
-        .body(skillCreateOrder())
-        .post(getFullPathVariable(format(SKILLS_PATH, this.resume.getId())))
+        .body(timelineEventCreateOrder())
+        .post(getFullPathVariable(format(TIMELINE_EVENTS_PATH, this.resume.getId())))
         .then()
         .statusCode(UNAUTHORIZED.value());
   }
@@ -137,8 +150,8 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
     final ProblemDetail problemDetail =
         givenAuthenticated()
             .contentType(JSON)
-            .body(skillCreateOrder())
-            .post(getFullPathVariable(format(SKILLS_PATH, resumeId)))
+            .body(timelineEventCreateOrder())
+            .post(getFullPathVariable(format(TIMELINE_EVENTS_PATH, resumeId)))
             .then()
             .statusCode(NOT_FOUND.value())
             .extract()
@@ -151,29 +164,36 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   public void update_success() {
-    final var existingSkill = this.skillRepository.save(skill(this.resume));
-    final var skillUpdateOrder = skillUpdateOrder();
+    final var existingTimelineEvent = this.timelineEventRepository.save(timelineEvent(this.resume));
+    final var timelineEventUpdateOrder = timelineEventUpdateOrder();
 
-    final SkillView updatedSkill =
+    final TimelineEventView updatedTimelineEvent =
         givenAuthenticated()
             .header(
                 IF_MODIFIED_SINCE,
-                ofPattern(ISO_DATETIME_FORMAT).format(existingSkill.getLastModifiedAt()))
+                ofPattern(ISO_DATETIME_FORMAT).format(existingTimelineEvent.getLastModifiedAt()))
             .contentType(JSON)
-            .body(skillUpdateOrder)
+            .body(timelineEventUpdateOrder)
             .put(
-                getFullPathVariable(format(SKILL_PATH, this.resume.getId(), existingSkill.getId())))
+                getFullPathVariable(
+                    format(
+                        TIMELINE_EVENT_PATH, this.resume.getId(), existingTimelineEvent.getId())))
             .then()
             .statusCode(OK.value())
             .extract()
-            .as(SkillView.class);
+            .as(TimelineEventView.class);
 
-    assertThat(updatedSkill)
-        .extracting(SkillView::getName, SkillView::getSkillCategory, SkillView::getSkillLevel)
+    assertThat(updatedTimelineEvent)
+        .extracting(
+            TimelineEventView::getJobPosition,
+            TimelineEventView::getInstitution,
+            TimelineEventView::getDescription,
+            TimelineEventView::getDateOfEvent)
         .containsExactly(
-            skillUpdateOrder.getName(),
-            skillUpdateOrder.getSkillCategory(),
-            skillUpdateOrder.getSkillLevel());
+            timelineEventUpdateOrder.getJobPosition(),
+            timelineEventUpdateOrder.getInstitution(),
+            timelineEventUpdateOrder.getDescription(),
+            timelineEventUpdateOrder.getDateOfEvent());
   }
 
   @Test
@@ -184,8 +204,8 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
         givenAuthenticated()
             .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(now()))
             .contentType(JSON)
-            .body(skillUpdateOrder())
-            .put(getFullPathVariable(format(SKILL_PATH, resumeId, randomUUID())))
+            .body(timelineEventUpdateOrder())
+            .put(getFullPathVariable(format(TIMELINE_EVENT_PATH, resumeId, randomUUID())))
             .then()
             .statusCode(NOT_FOUND.value())
             .extract()
@@ -204,15 +224,16 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
         givenAuthenticated()
             .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(now()))
             .contentType(JSON)
-            .body(skillUpdateOrder())
-            .put(getFullPathVariable(format(SKILL_PATH, this.resume.getId(), skillId)))
+            .body(timelineEventUpdateOrder())
+            .put(getFullPathVariable(format(TIMELINE_EVENT_PATH, this.resume.getId(), skillId)))
             .then()
             .statusCode(NOT_FOUND.value())
             .extract()
             .as(ProblemDetail.class);
 
-    assertThat(problemDetail.getTitle()).isEqualTo("Skill not found");
-    assertThat(problemDetail.getDetail()).isEqualTo(format("Skill with id %s not found", skillId));
+    assertThat(problemDetail.getTitle()).isEqualTo("Timeline event not found");
+    assertThat(problemDetail.getDetail())
+        .isEqualTo(format("Timeline event with id %s not found", skillId));
   }
 
   @Test
@@ -220,23 +241,25 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
     given()
         .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(now()))
         .contentType(JSON)
-        .body(skillUpdateOrder())
-        .put(getFullPathVariable(format(SKILL_PATH, this.resume.getId(), randomUUID())))
+        .body(timelineEventUpdateOrder())
+        .put(getFullPathVariable(format(TIMELINE_EVENT_PATH, this.resume.getId(), randomUUID())))
         .then()
         .statusCode(UNAUTHORIZED.value());
   }
 
   @Test
   public void update_modifiedSince() {
-    final var existingSkill = this.skillRepository.save(skill(this.resume));
+    final var existingTimelineEvent = this.timelineEventRepository.save(timelineEvent(this.resume));
 
     givenAuthenticated()
         .header(
             IF_MODIFIED_SINCE,
-            ofPattern(ISO_DATETIME_FORMAT).format(existingSkill.getLastModifiedAt()))
+            ofPattern(ISO_DATETIME_FORMAT).format(existingTimelineEvent.getLastModifiedAt()))
         .contentType(JSON)
-        .body(skillUpdateOrder())
-        .put(getFullPathVariable(format(SKILL_PATH, this.resume.getId(), existingSkill.getId())))
+        .body(timelineEventUpdateOrder())
+        .put(
+            getFullPathVariable(
+                format(TIMELINE_EVENT_PATH, this.resume.getId(), existingTimelineEvent.getId())))
         .then()
         .statusCode(OK.value());
 
@@ -244,11 +267,13 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
         givenAuthenticated()
             .header(
                 IF_MODIFIED_SINCE,
-                ofPattern(ISO_DATETIME_FORMAT).format(existingSkill.getLastModifiedAt()))
+                ofPattern(ISO_DATETIME_FORMAT).format(existingTimelineEvent.getLastModifiedAt()))
             .contentType(JSON)
-            .body(skillUpdateOrder())
+            .body(timelineEventUpdateOrder())
             .put(
-                getFullPathVariable(format(SKILL_PATH, this.resume.getId(), existingSkill.getId())))
+                getFullPathVariable(
+                    format(
+                        TIMELINE_EVENT_PATH, this.resume.getId(), existingTimelineEvent.getId())))
             .then()
             .statusCode(PRECONDITION_FAILED.value())
             .extract()
@@ -259,18 +284,21 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   public void delete_success() {
-    final var existingSkill = this.skillRepository.save(skill(this.resume));
+    final var existingTimelineEvent = this.timelineEventRepository.save(timelineEvent(this.resume));
 
     givenAuthenticated()
         .header(
             IF_MODIFIED_SINCE,
-            ofPattern(ISO_DATETIME_FORMAT).format(existingSkill.getLastModifiedAt()))
+            ofPattern(ISO_DATETIME_FORMAT).format(existingTimelineEvent.getLastModifiedAt()))
         .contentType(JSON)
-        .delete(getFullPathVariable(format(SKILL_PATH, this.resume.getId(), existingSkill.getId())))
+        .delete(
+            getFullPathVariable(
+                format(TIMELINE_EVENT_PATH, this.resume.getId(), existingTimelineEvent.getId())))
         .then()
         .statusCode(NO_CONTENT.value());
 
-    final var deletedResume = this.skillRepository.findById(existingSkill.getId()).orElseThrow();
+    final var deletedResume =
+        this.timelineEventRepository.findById(existingTimelineEvent.getId()).orElseThrow();
 
     assertThat(deletedResume.getIsDeleted()).isTrue();
   }
@@ -283,7 +311,7 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
         givenAuthenticated()
             .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(now()))
             .contentType(JSON)
-            .delete(getFullPathVariable(format(SKILL_PATH, resumeId, randomUUID())))
+            .delete(getFullPathVariable(format(TIMELINE_EVENT_PATH, resumeId, randomUUID())))
             .then()
             .statusCode(NOT_FOUND.value())
             .extract()
@@ -299,22 +327,24 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
     given()
         .header(IF_MODIFIED_SINCE, ofPattern(ISO_DATETIME_FORMAT).format(now()))
         .contentType(JSON)
-        .delete(getFullPathVariable(format(SKILL_PATH, randomUUID(), randomUUID())))
+        .delete(getFullPathVariable(format(TIMELINE_EVENT_PATH, randomUUID(), randomUUID())))
         .then()
         .statusCode(UNAUTHORIZED.value());
   }
 
   @Test
   public void delete_modifiedSince() {
-    final var existingSkill = this.skillRepository.save(skill(this.resume));
+    final var existingTimelineEvent = this.timelineEventRepository.save(timelineEvent(this.resume));
 
     givenAuthenticated()
         .header(
             IF_MODIFIED_SINCE,
-            ofPattern(ISO_DATETIME_FORMAT).format(existingSkill.getLastModifiedAt()))
+            ofPattern(ISO_DATETIME_FORMAT).format(existingTimelineEvent.getLastModifiedAt()))
         .contentType(JSON)
-        .body(skillUpdateOrder())
-        .put(getFullPathVariable(format(SKILL_PATH, this.resume.getId(), existingSkill.getId())))
+        .body(timelineEventUpdateOrder())
+        .put(
+            getFullPathVariable(
+                format(TIMELINE_EVENT_PATH, this.resume.getId(), existingTimelineEvent.getId())))
         .then()
         .statusCode(OK.value());
 
@@ -322,10 +352,12 @@ public class SkillControllerIntegrationTest extends AbstractIntegrationTest {
         givenAuthenticated()
             .header(
                 IF_MODIFIED_SINCE,
-                ofPattern(ISO_DATETIME_FORMAT).format(existingSkill.getLastModifiedAt()))
+                ofPattern(ISO_DATETIME_FORMAT).format(existingTimelineEvent.getLastModifiedAt()))
             .contentType(JSON)
             .delete(
-                getFullPathVariable(format(SKILL_PATH, this.resume.getId(), existingSkill.getId())))
+                getFullPathVariable(
+                    format(
+                        TIMELINE_EVENT_PATH, this.resume.getId(), existingTimelineEvent.getId())))
             .then()
             .statusCode(PRECONDITION_FAILED.value())
             .extract()

@@ -29,8 +29,8 @@ public class SkillServiceUnitTest implements AbstractUnitTest {
   @Test
   void getAllByResume_success() {
     when(skillRepository.findAllByResumeIdAndIsDeletedIsFalse(any())).thenReturn(List.of(skill()));
-    final List<Skill> resume = skillService.getAllByResume(randomUUID());
-    assertThat(resume).hasSize(1);
+    final List<Skill> skills = skillService.getAllByResume(randomUUID());
+    assertThat(skills).hasSize(1);
   }
 
   @Test
