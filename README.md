@@ -24,7 +24,7 @@ There are already default values set within the application.
 1. Make sure [***docker***](https://www.docker.com/) is installed & running
 2. To create the database container run:
     ```bash
-    docker run --name resume-database-container -p 5433:5432 -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=letmein -e POSTGRES_DB=resume-database -d postgres:17.0
+    docker run --name resume-database-container -p 5433:5432 -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=letmein -e POSTGRES_DB=resume-database -d postgres:17.2
     ```
 3. To start the application run:
     ```bash
@@ -63,8 +63,8 @@ is used.
 
 ### Swagger
 
-To see the Swagger documentation go [***here***](http://localhost:8080/docs/ui)
+To see the Swagger documentation go [***here***](https://fynn-koch.de:8443/docs/ui)
 
 ### OpenAPI
 
-To see the OpenAPI specs go [***here***](http://localhost:8080/docs)
+To see the OpenAPI specs go [***here***](https://fynn-koch.de:8443/docs)
