@@ -38,7 +38,7 @@ public class TimelineEventServiceUnitTest implements AbstractUnitTest {
   void getOne_success() {
     when(timelineEventRepository.findByIdAndIsDeletedIsFalse(any()))
         .thenReturn(Optional.of(timelineEvent()));
-    final TimelineEvent timelineEvent = timelineEventService.getOne(resume().getId());
+    final TimelineEvent timelineEvent = timelineEventService.getOne(randomUUID());
     assertThat(timelineEvent).isNotNull();
   }
 

@@ -14,7 +14,6 @@ public class ResumeFactory {
 
   public static Resume resume() {
     return Resume.builder()
-        .id(randomUUID())
         .isDeleted(false)
         .firstName("Tom")
         .lastName("Smith")

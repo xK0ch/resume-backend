@@ -35,7 +35,7 @@ public class ResumeServiceUnitTest implements AbstractUnitTest {
   @Test
   void getOne_success() {
     when(resumeRepository.findByIdAndIsDeletedIsFalse(any())).thenReturn(Optional.of(resume()));
-    final Resume resume = resumeService.getOne(resume().getId());
+    final Resume resume = resumeService.getOne(randomUUID());
     assertThat(resume).isNotNull();
   }
 

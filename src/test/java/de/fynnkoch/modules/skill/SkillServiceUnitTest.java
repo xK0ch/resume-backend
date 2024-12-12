@@ -36,7 +36,7 @@ public class SkillServiceUnitTest implements AbstractUnitTest {
   @Test
   void getOne_success() {
     when(skillRepository.findByIdAndIsDeletedIsFalse(any())).thenReturn(Optional.of(skill()));
-    final Skill skill = skillService.getOne(resume().getId());
+    final Skill skill = skillService.getOne(randomUUID());
     assertThat(skill).isNotNull();
   }
 

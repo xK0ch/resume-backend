@@ -12,7 +12,6 @@ public class TimelineEventFactory {
 
   public static TimelineEvent timelineEvent() {
     return TimelineEvent.builder()
-        .id(randomUUID())
         .isDeleted(false)
         .jobPosition("Software Engineer")
         .institution("Some company")

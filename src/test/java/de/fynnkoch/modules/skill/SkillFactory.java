@@ -6,7 +6,6 @@ import static de.fynnkoch.modules.skill.SkillCategory.OTHER;
 import static de.fynnkoch.modules.skill.SkillLevel.ADVANCED;
 import static de.fynnkoch.modules.skill.SkillLevel.EXPERT;
 import static de.fynnkoch.modules.skill.SkillLevel.INTERMEDIATE;
-import static java.util.UUID.randomUUID;
 
 import de.fynnkoch.modules.resume.Resume;
 import lombok.experimental.UtilityClass;
@@ -16,7 +15,6 @@ public class SkillFactory {
 
   public static Skill skill() {
     return Skill.builder()
-        .id(randomUUID())
         .isDeleted(false)
         .name("Spring Boot")
         .skillLevel(EXPERT)
