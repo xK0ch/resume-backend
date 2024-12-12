@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    triggers {
-        pollSCM('H * * * *')
-    }
-
     environment {
         BASIC_AUTH_USERNAME = credentials('resume-backend-username')
         BASIC_AUTH_PASSWORD = credentials('resume-backend-password')
