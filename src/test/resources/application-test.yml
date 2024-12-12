@@ -2,7 +2,6 @@ spring:
   main:
     lazy-initialization: false
   flyway:
-    clean-on-validation-error: true
     user: ${embedded.postgresql.user}
     password: ${embedded.postgresql.password}
   datasource:
